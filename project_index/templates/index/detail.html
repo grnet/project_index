@@ -15,6 +15,16 @@
 		</ul>
 	{% endif %}
 {% endwith %}
+{% with project.instance_set.all as instances %}
+	{% if instances %}
+		<h2>Docs</h2>
+		<ul>
+		{% for instance in instances %}
+			<li><a href="{{ instance.url }}">{{ instance.instance_type }}({{ instance.description }}) path: {{ instance.path }}</a></li>
+		{% endfor %}
+		</ul>
+	{% endif %}
+{% endwith %}
 {% with project.repository_set.all as repos %}
 	{% if repos %}
 		<h2>Repositories</h2>
