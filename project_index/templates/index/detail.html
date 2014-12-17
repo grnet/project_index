@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<h1>{{ project.name }}</h1>
+<h2>Description</h2>
+<p>{{ project.description }}</p>
+{% with project.doc_set.all as docs %}
+	{% if docs %}
+		<h2>Docs</h2>
+		<ul>
+		{% for doc in  docs %}
+			<li><a href="{{ doc.url }}">{{ doc.name }}</a></li>
+		{% endfor %}
+		</ul>
+	{% endif %}
+{% endwith %}
+{% with project.repository_set.all as repos %}
+	{% if repos %}
+		<h2>Repositories</h2>
+		<ul>
+			{% for repo in repos %}
+				<li><a href="{{ repo.url }}">{{ repo }}</a></li>
+			{% endfor %}
+		</ul>
+	{% endif %}
+{% endwith %}
+{% with project.tag_set.all as tags %}
+	{% if tags %}
+		<h5>tags</h5>
+		<ul>
+		{% for tag in tags %}
+			<li>{{ tag }}</li>
+		{% endfor %}
+	{% endif%}
+{% endwith %}
+</ul>
+{% endblock %}

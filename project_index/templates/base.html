@@ -1,0 +1,55 @@
+{% load staticfiles %}
+
+<!doctype html>
+<html>
+<head>
+	<title>project_index{% block page_title %}{% endblock %}</title>
+	<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="{% static "css/screen.css" %}">
+
+	<link rel="shortcut icon" href="{% static "images/favicon.ico" %}" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<div class="body">
+		<header>
+			<div class="container">
+				<a href="/" class="logo">
+					{% if branding %}
+						<img src="{% static "images/"|add:branding.logo %}" alt="">
+					{% endif %}
+
+					<div>
+						<h3>project_index</h3>
+						{% if branding %}
+						<h5>{{ branding.name }}</h5>
+						{% endif %}
+					</div>
+
+				</a>
+			</div>
+		</header>
+		<section id="main" class="container">
+			{% block content %}
+
+			{% endblock %}
+		</section>
+	</div>
+	<footer>
+		{% if branding %}
+		<div class="container">This is a sevice provided by
+			<a href="{{ branding.website }}" target="_blank">GRNET NOC</a>
+			<a target="_blank" href="{{ branding.facebook }}">
+				<i class="fa fa-facebook"></i>
+			</a>
+			<a target="_blank" href="{{ branding.twitter }}">
+				<i class="fa fa-twitter"></i>
+			</a>
+		</div>
+		{% endif %}
+
+	</footer>
+	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js" ></script>
+</body>
+</html>

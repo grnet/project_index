@@ -1,0 +1,9 @@
+# python garbage files
+*.pyc
+
+# django-managed static and media files
+/public
+
+# local settings should be overriden per site
+local_settings.py
+
