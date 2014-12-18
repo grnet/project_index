@@ -13,17 +13,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from django.conf.urls import patterns, include, url
-from django.contrib import admin
-
-from index import urls as index_urls
-from notes import urls as notes_urls
-
-admin.autodiscover()
-
+from django.conf.urls import patterns, url
+from notes import views
 urlpatterns = patterns(
     '',
-    url(r'^', include(index_urls)),
-    url(r'^notes/', include(notes_urls)),
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^$', views.list, name='list'),
 )

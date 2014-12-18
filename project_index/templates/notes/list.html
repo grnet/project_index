@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load markdown_deux_tags %}
+
+{% block content %}
+<h1>Notes</h1>
+	{% for note in notes %}
+		<h2>{{ note.title }}</h2>
+		<p>
+			{% markdown %}
+			{{ note.description }}
+			{% endmarkdown %}
+		</p>
+		{% with note.tag.all as tags %}
+			{% if tags %}
+				<h3>Tags</h3>
+				<ul>
+					{% for tag in tags %}
+					<li>{{ tag }}</li>
+					{% endfor %}
+				</ul>
+			{% endif %}
+		{% endwith %}
+	{% endfor %}
+{% endblock %}
