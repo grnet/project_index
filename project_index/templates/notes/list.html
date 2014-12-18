@@ -7,7 +7,7 @@
 		<h2>{{ note.title }}</h2>
 		<p>
 			{% markdown %}
-			{{ note.description }}
+				{{ note.description }}
 			{% endmarkdown %}
 		</p>
 		{% with note.tag.all as tags %}

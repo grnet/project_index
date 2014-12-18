@@ -24,6 +24,6 @@ admin.autodiscover()
 urlpatterns = patterns(
     '',
     url(r'^', include(index_urls)),
-    url(r'^notes/', include(notes_urls)),
+    url(r'^notes/', include(notes_urls, namespace='notes')),
     url(r'^admin/', include(admin.site.urls)),
 )
