@@ -1,10 +1,13 @@
 {% extends 'base.html' %}
+{% load markdown_deux_tags %}
 
 
 {% block content %}
 <h1>{{ project.name }}</h1>
 <h2>Description</h2>
-<p>{{ project.description }}</p>
+	{% autoescape off %}
+	{% markdown %}{{ project.description }}{% endmarkdown %}
+	{% endautoescape %}
 {% with project.doc_set.all as docs %}
 	{% if docs %}
 		<h2>Docs</h2>
@@ -17,7 +20,7 @@
 {% endwith %}
 {% with project.instance_set.all as instances %}
 	{% if instances %}
-		<h2>Docs</h2>
+		<h2>Instances</h2>
 		<ul>
 		{% for instance in instances %}
 			<li><a href="{{ instance.url }}">{{ instance.instance_type }}({{ instance.description }}) path: {{ instance.path }}</a></li>

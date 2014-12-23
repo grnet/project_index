@@ -6,9 +6,7 @@
 	{% for note in notes %}
 		<h2>{{ note.title }}</h2>
 		<p>
-			{% markdown %}
-				{{ note.description }}
-			{% endmarkdown %}
+			{% markdown %}{{ note.description }}{% endmarkdown %}
 		</p>
 		{% with note.tag.all as tags %}
 			{% if tags %}
@@ -22,3 +20,8 @@
 		{% endwith %}
 	{% endfor %}
 {% endblock %}
+
+
+
+
+
