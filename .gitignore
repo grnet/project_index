@@ -7,3 +7,5 @@
 # local settings should be overriden per site
 local_settings.py
 
+# database
+*.db
