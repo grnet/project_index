@@ -54,5 +54,9 @@ class Docs(models.Model):
 class Tag(models.Model):
     name = models.CharField(max_length=255)
 
+    def get_absolute_url(self):
+        print reverse('tags:detail', kwargs={'name': self.name})
+        return reverse('tags:detail', kwargs={'name': self.name})
+
     def __unicode__(self):
         return self.name

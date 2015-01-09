@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	<h1>{{ tag.name }}</h1>
+	{% with tag.project_set.all as projects %}
+		{% if projects %}
+		<h2>Projects</h2>
+		<ul>
+		{% for project in projects %}
+			<li>
+				<a href="{{ project.get_absolute_url }}">{{ project }}</a>
+			</li>
+		{% endfor %}
+		</ul>
+		{% endif%}
+	{% endwith %}
+	{% with tag.note_set.all as notes %}
+		{% if notes %}
+		<h2>notes</h2>
+		<ul>
+		{% for note in notes %}
+			<li>
+				<a href="{{ note.get_absolute_url }}">{{ note }}</a>
+			</li>
+		{% endfor %}
+		</ul>
+		{% endif%}
+	{% endwith %}
+{% endblock %}
