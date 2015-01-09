@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<ul>
+	{% for meeting in meetings %}
+		<li><a href="{{ meeting.get_absolute_url }}">{{ meeting.date }}</a></li>
+	{% endfor %}
+</ul>
+{% endblock %}

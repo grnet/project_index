@@ -99,6 +99,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'index',
     'notes',
+    'meetings',
     'markdown_deux',
     'south',
 )
