@@ -7,5 +7,4 @@ def list(request):
 
 
 def detail(request, id):
-    print 'asd'
     return render(request, 'meetings/detail.html', {'meeting': get_object_or_404(Meeting, id=id)})
