@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<h1>Tags</h1>
 <ul>
 	{% for tag in tags %}
 		<li><a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a></li>
