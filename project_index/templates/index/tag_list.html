@@ -2,9 +2,10 @@
 
 {% block content %}
 <h1>Tags</h1>
-<ul>
+
+<div class="list-group">
 	{% for tag in tags %}
-		<li><a href="{{ tag.get_absolute_url }}">{{ tag.name }}</a></li>
+		<a class="list-group-item" href="{{ tag.get_absolute_url }}">{{ tag.name }}</a>
 	{% endfor %}
-</ul>
+</div>
 {% endblock %}

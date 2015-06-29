@@ -3,9 +3,9 @@
 
 {% block content %}
 <h1>Projects</h1>
-<ul>
+<div class="list-group">
 	{% for project in projects %}
-		<li><a href="{{ project.get_absolute_url }}">{{ project.name }}</a></li>
+		<a class="list-group-item" href="{{ project.get_absolute_url }}">{{ project.name }}</a>
 	{% endfor %}
-</ul>
+</div>
 {% endblock %}

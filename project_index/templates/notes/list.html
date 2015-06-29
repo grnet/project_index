@@ -11,11 +11,11 @@
 		{% with note.tag.all as tags %}
 			{% if tags %}
 				<h3>Tags</h3>
-				<ul>
+				<div class="list-group">
 					{% for tag in tags %}
-					<li><a href="{{ tag.get_absolute_url }}">{{ tag }}</a></li>
+					<a class="list-group-item" href="{{ tag.get_absolute_url }}">{{ tag }}</a>
 					{% endfor %}
-				</ul>
+				</div>
 			{% endif %}
 		{% endwith %}
 	{% endfor %}
