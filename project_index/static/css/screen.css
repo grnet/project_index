@@ -9,7 +9,7 @@ header {
 	background: -ms-linear-gradient(top, #ffffff 0%,#cccccc 100%); /* IE10+ */
 	background: linear-gradient(to bottom, #ffffff 0%,#cccccc 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#cccccc',GradientType=0 ); /* IE6-9 */
-	margin-bottom: 50px;
+	margin-bottom: 60px;
 }
 
 header a.logo {
@@ -24,15 +24,11 @@ header a.logo img {
 	top: 0;
 }
 
-header a.logo div {
+header a.logo {
 	float: left;
-	margin-left: 90px;
+	padding-left: 90px;
 }
 
-
-header a.logo h3, header a.logo h5 {
-	margin: 0;
-}
 
 header a.logo:after {
 	content:"";

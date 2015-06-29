@@ -13,25 +13,32 @@
 <body>
 	<div class="body">
 		<header>
-			<div class="container">
-				<a href="/" class="logo">
-					{% if branding %}
-						<img src="{% static "images/"|add:branding.logo %}" alt="">
-					{% endif %}
-
-					<div>
-						<h3>project_index</h3>
-						{% if branding %}
-						<h5>{{ branding.name }}</h5>
-						{% endif %}
-					</div>
-
-				</a>
-				<a href="{% url notes:list %}">Notes</a>
-				<a href="{% url list %}">Projects</a>
-				<a href="{% url meetings:list %}">Meetings</a>
-				<a href="{% url tags:list %}">Tags</a>
-			</div>
+			<nav class="navbar navbar-default navbar-fixed-top">
+				<div class="container">
+					<div class="navbar-header">
+				        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+				            <span class="sr-only">Toggle navigation</span>
+				            <span class="icon-bar"></span>
+				            <span class="icon-bar"></span>
+				            <span class="icon-bar"></span>
+			        	</button>
+						<a href="/" class="navbar-brand logo">
+							{% if branding %}
+								<img src="{% static "images/"|add:branding.logo %}" alt="">
+							{% endif %}
+							project_index
+						</a>
+				    </div>
+			        <div id="navbar" class="navbar-collapse collapse">
+						<ul class="nav navbar-nav">
+							<li class="active"><a href="/">Home</a></li>
+							<li><a href="{% url notes:list %}">Notes</a></li>
+							<li><a href="{% url list %}">Projects</a></li>
+							<li><a href="{% url tags:list %}">Tags</a></li>
+						</ul>
+					</div><!--/.nav-collapse -->
+				</div>
+			</nav>
 		</header>
 		<section id="main" class="container">
 			{% block content %}
