@@ -19,6 +19,8 @@ class DocsInline(admin.TabularInline):
 
 class ProjectAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
+    list_display = ('name', 'hosts')
+    list_filter = ('tag',)
     inlines = [
         RepositoryInline,
         InstanceInline,

@@ -8,6 +8,18 @@ class Project(models.Model):
     description = models.TextField()
     tag = models.ManyToManyField('Tag')
 
+    @property
+    def hosts(self):
+        result = []
+        for instance in self.instance_set.all():
+            try:
+                name = instance.host.name
+            except:
+                continue
+            else:
+                result.append(name)
+        return ', '.join(result)
+
     def get_absolute_url(self):
         return reverse('detail', kwargs={'project_slug': self.slug})
 
