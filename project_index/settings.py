@@ -111,7 +111,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.media',
     'django.core.context_processors.static',
     'django.contrib.messages.context_processors.messages',
-    'project_index.context_processors.branding'
+    'project_index.context_processors.branding',
+    'project_index.context_processors.menu',
 )
 
 AUTH_PROFILE_MODULE = 'accounts.UserProfile'
