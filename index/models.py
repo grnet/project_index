@@ -15,7 +15,7 @@ class Project(models.Model):
         return self.name
 
     class Meta:
-        ordering = ['-name']
+        ordering = ['name']
 
 
 class Repository(models.Model):
@@ -34,7 +34,7 @@ class Host(models.Model):
         return self.name
 
     class Meta:
-        ordering = ['-name']
+        ordering = ['name']
 
 
 class Instance(models.Model):
