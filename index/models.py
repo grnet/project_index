@@ -20,7 +20,7 @@ class Project(models.Model):
 
 class Repository(models.Model):
     name = models.CharField(max_length=255)
-    url = models.URLField()
+    url = models.URLField(null=True, blank=True)
     project = models.ForeignKey(Project)
 
     def __unicode__(self):
