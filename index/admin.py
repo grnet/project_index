@@ -1,5 +1,5 @@
 from django.contrib import admin
-from index.models import Project, Repository, Instance, Tag, Docs
+from index.models import Project, Repository, Instance, Tag, Docs, Host
 
 
 class RepositoryInline(admin.TabularInline):
@@ -27,3 +27,4 @@ class ProjectAdmin(admin.ModelAdmin):
 
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(Tag)
+admin.site.register(Host)

@@ -23,7 +23,7 @@
 		<h2>Instances</h2>
 		<div class="list-group">
 		{% for instance in instances %}
-			<a class="list-group-item" href="{{ instance.url }}">{{ instance.instance_type }}({{ instance.description }}) path: {{ instance.path }} {% if instance.host %}host: {{ instance.host }}{% endif %}</a>
+			<a class="list-group-item" href="{{ instance.url }}">{{ instance.instance_type }} ({{ instance.description }}) path: {{ instance.path }} {% if instance.host %}host: {{ instance.host }}{% endif %}</a>
 		{% endfor %}
 		</div>
 	{% endif %}
