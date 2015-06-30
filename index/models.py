@@ -7,6 +7,7 @@ class Project(models.Model):
     slug = models.SlugField(max_length=255)
     description = models.TextField()
     tag = models.ManyToManyField('Tag')
+    dependencies = models.ManyToManyField('Dependency')
 
     @property
     def hosts(self):
@@ -82,6 +83,15 @@ class Tag(models.Model):
 
     def get_absolute_url(self):
         return reverse('tags:detail', kwargs={'name': self.name})
+
+    def __unicode__(self):
+        return self.name
+
+
+class Dependency(models.Model):
+    name = models.CharField(max_length=255)
+    package_name = models.SlugField(max_length=255, null=True)
+    pip_package_name = models.SlugField(max_length=255)
 
     def __unicode__(self):
         return self.name
