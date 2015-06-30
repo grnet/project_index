@@ -2,7 +2,7 @@
 
 
 {% block content %}
-<h1>Projects</h1>
+<h1> {{ projects.count }} Projects</h1>
 <div class="list-group">
 	{% for project in projects %}
 		<a class="list-group-item" href="{{ project.get_absolute_url }}">{{ project.name }}</a>
