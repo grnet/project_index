@@ -90,7 +90,7 @@ class Tag(models.Model):
 
 class Dependency(models.Model):
     name = models.CharField(max_length=255)
-    package_name = models.SlugField(max_length=255, null=True)
+    package_name = models.SlugField(max_length=255, null=True, blank=True)
     pip_package_name = models.SlugField(max_length=255)
     version = models.CharField(max_length=255)
 
