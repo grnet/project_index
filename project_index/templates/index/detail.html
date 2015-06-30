@@ -38,6 +38,18 @@
 		</div>
 	{% endif %}
 {% endwith %}
+
+{% with project.dependencies.all as dependencies %}
+	{% if dependencies %}
+		<h2>Dependencies</h2>
+		<div class="list-group">
+		{% for dependency in dependencies %}
+			{{ dependency.name }}
+		{% endfor %}
+		</div>
+	{% endif%}
+{% endwith %}
+
 {% with project.tag.all as tags %}
 	{% if tags %}
 		<h2>Tags</h2>
@@ -45,8 +57,7 @@
 		{% for tag in tags %}
 			<a class="list-group-item" href="{{ tag.get_absolute_url }}">{{ tag }}</a>
 		{% endfor %}
+		</div>
 	{% endif%}
 {% endwith %}
-		</div>
-
 {% endblock %}
