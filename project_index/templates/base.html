@@ -3,7 +3,7 @@
 <!doctype html>
 <html>
 <head>
-	<title>project_index{% block page_title %}{% endblock %}</title>
+	<title>{{ branding.project_name }}{% block page_title %}{% endblock %}</title>
 	<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="{% static "css/screen.css" %}">
@@ -26,7 +26,7 @@
 							{% if branding %}
 								<img src="{% static "images/"|add:branding.logo %}" alt="">
 							{% endif %}
-							project_index
+							{{ branding.project_name }}
 						</a>
 				    </div>
 			        <div id="navbar" class="navbar-collapse collapse">

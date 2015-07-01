@@ -39,6 +39,7 @@ DATABASES = {
 }
 
 BRANDING = {
+    'project_name': 'project_index',
     'name': 'Grnet Noc',
     'logo': 'grnet_logo.png',
     'facebook': 'https://www.facebook.com/noc.grnet.gr',
