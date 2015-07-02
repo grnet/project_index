@@ -118,6 +118,9 @@ class Dependency(models.Model):
     pip_package_name = models.SlugField(max_length=255)
     version = models.CharField(max_length=255, null=True, blank=True)
 
+    def dependent_project_count(self):
+        return self.project_set.count()
+
     def __unicode__(self):
         return self.name
 

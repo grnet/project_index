@@ -29,7 +29,7 @@ class ProjectAdmin(admin.ModelAdmin):
 
 
 class DependencyAdmin(admin.ModelAdmin):
-    list_display = ('name', 'version')
+    list_display = ('name', 'version', 'dependent_project_count')
 
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(Tag)
