@@ -36,13 +36,14 @@ def get_requirements(project):
                     repo = Gittle.clone(repository.url, path, bare=True)
                 except:
                     pass
-                requirements = repo.file_versions('requirements.txt')
-                if requirements:
-                    requirements = requirements[0].get('data')
-                    for r in requirements.split('\n'):
-                        parse_dependencies(r, project)
-                    shutil.rmtree(repo.path)
-                    return True
+                else:
+                    requirements = repo.file_versions('requirements.txt')
+                    if requirements:
+                        requirements = requirements[0].get('data')
+                        for r in requirements.split('\n'):
+                            parse_dependencies(r, project)
+                        shutil.rmtree(repo.path)
+                        return True
     elif project.dependency_file:
         for l in project.dependency_file.readlines():
             parse_dependencies(l, project)
