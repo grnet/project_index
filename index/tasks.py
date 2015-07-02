@@ -49,4 +49,5 @@ def get_requirements(project):
         for l in project.dependency_file.readlines():
             parse_dependencies(l, project)
         return True
-    return False
+    else:
+        return False

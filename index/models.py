@@ -4,6 +4,7 @@ from django.db import models
 from django.core.urlresolvers import reverse
 from django.dispatch import receiver
 from django.db.models.signals import post_save
+from django.core.exceptions import ValidationError
 from index.tasks import get_requirements
 
 join = os.path.join
@@ -46,6 +47,11 @@ class Repository(models.Model):
     name = models.CharField(max_length=255)
     url = models.URLField(null=True, blank=True)
     project = models.ForeignKey(Project)
+
+    def clean(self):
+        # Don't allow draft entries to have a pub_date.
+        if self.url.split('.')[-1] != 'git':
+            raise ValidationError('Repository\'s url must end with .git')
 
     def __unicode__(self):
         return self.name
