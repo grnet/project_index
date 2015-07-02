@@ -1,9 +1,9 @@
 from __future__ import absolute_import
 import random
 import string
-import os
 from celery import shared_task
 from gittle import Gittle
+import shutil
 
 
 def parse_dependencies(line, project):
@@ -33,18 +33,16 @@ def get_requirements(project):
             if repository.url:
                 path = ('/tmp/%s/') % ''.join(random.choice(string.lowercase) for i in range(20))
                 try:
-                    repo = Gittle.clone_(repository.url, path, bare=True)
+                    repo = Gittle.clone(repository.url, path, bare=True)
                 except:
-                    # could not connect to the repo
-                    continue
-                else:
-                    requirements = repo.file_versions('requirements.txt')
-                    if requirements:
-                        requirements = requirements[0].get('data')
-                        for r in requirements.split('\n'):
-                            parse_dependencies(r, project)
-                        os.rmdir(repo.path)
-                        return True
+                    pass
+                requirements = repo.file_versions('requirements.txt')
+                if requirements:
+                    requirements = requirements[0].get('data')
+                    for r in requirements.split('\n'):
+                        parse_dependencies(r, project)
+                    shutil.rmtree(repo.path)
+                    return True
     elif project.dependency_file:
         for l in project.dependency_file.readlines():
             parse_dependencies(l, project)
