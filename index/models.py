@@ -1,5 +1,12 @@
+import os
+
 from django.db import models
 from django.core.urlresolvers import reverse
+from django.dispatch import receiver
+from django.db.models.signals import post_save
+from index.tasks import get_requirements
+
+join = os.path.join
 
 
 class Project(models.Model):
@@ -7,7 +14,11 @@ class Project(models.Model):
     slug = models.SlugField(max_length=255)
     description = models.TextField()
     tag = models.ManyToManyField('Tag')
-    dependencies = models.ManyToManyField('Dependency')
+    dependencies = models.ManyToManyField('Dependency', null=True, blank=True)
+    dependency_file = models.FileField(upload_to='dependencies', null=True, blank=True)
+
+    def get_dependencies(self):
+        return get_requirements.delay(self)
 
     @property
     def hosts(self):
@@ -66,7 +77,11 @@ class Instance(models.Model):
     host = models.ForeignKey(Host, null=True, blank=True)
 
     def __unicode__(self):
-        return '%s, %s, %s' % (self.project, self.instance_type, self.description)
+        return '%s, %s, %s' % (
+            self.project,
+            self.instance_type,
+            self.description
+        )
 
 
 class Docs(models.Model):
@@ -87,12 +102,24 @@ class Tag(models.Model):
     def __unicode__(self):
         return self.name
 
+    class Meta:
+        ordering = ['name']
+
 
 class Dependency(models.Model):
     name = models.CharField(max_length=255)
     package_name = models.SlugField(max_length=255, null=True, blank=True)
     pip_package_name = models.SlugField(max_length=255)
-    version = models.CharField(max_length=255)
+    version = models.CharField(max_length=255, null=True, blank=True)
 
     def __unicode__(self):
         return self.name
+
+    class Meta:
+        ordering = ['name']
+
+
+@receiver(post_save)
+def get_dependencies(sender, instance, created, *args, **kwargs):
+    if sender == Project:
+        instance.get_dependencies()

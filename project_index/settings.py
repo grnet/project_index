@@ -101,6 +101,8 @@ INSTALLED_APPS = (
     'notes',
     'markdown_deux',
     'south',
+    'djcelery',
+    'kombu.transport.django',
 )
 
 
@@ -116,6 +118,9 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 AUTH_PROFILE_MODULE = 'accounts.UserProfile'
+
+BROKER_URL = 'django://'
+CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
 
 
 def _dictmerge(a, b):
