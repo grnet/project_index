@@ -27,7 +27,11 @@ class ProjectAdmin(admin.ModelAdmin):
         DocsInline
     ]
 
+
+class DependencyAdmin(admin.ModelAdmin):
+    list_display = ('name', 'version')
+
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(Tag)
 admin.site.register(Host)
-admin.site.register(Dependency)
+admin.site.register(Dependency, DependencyAdmin)
