@@ -48,11 +48,6 @@ class Repository(models.Model):
     url = models.URLField(null=True, blank=True)
     project = models.ForeignKey(Project)
 
-    def clean(self):
-        # Don't allow draft entries to have a pub_date.
-        if self.url.split('.')[-1] != 'git':
-            raise ValidationError('Repository\'s url must end with .git')
-
     def __unicode__(self):
         return self.name
 
