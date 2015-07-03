@@ -16,8 +16,9 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 
-from index import urls as index_urls
-from index import tags_urls
+from index.urls import project_urls as index_urls
+from index.urls import tags_urls
+from index.urls import hosts_urls
 from notes import urls as notes_urls
 
 admin.autodiscover()
@@ -26,6 +27,7 @@ urlpatterns = patterns(
     '',
     url(r'^', include(index_urls)),
     url(r'^tags/', include(tags_urls, namespace='tags')),
+    url(r'^hosts/', include(hosts_urls, namespace='hosts')),
     url(r'^notes/', include(notes_urls, namespace='notes')),
     url(r'^admin/', include(admin.site.urls)),
 )

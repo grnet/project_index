@@ -44,7 +44,7 @@
 		<h2>Dependencies</h2>
 		<div class="list-group">
 		{% for dependency in dependencies %}
-			{{ dependency.name }}
+			<a class="list-group-item" href="{{ dependency.url }}">{{ dependency.name }} {% if dependency.version %}({{ dependency.version }}){% endif %}</a>
 		{% endfor %}
 		</div>
 	{% endif%}

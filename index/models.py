@@ -58,6 +58,18 @@ class Host(models.Model):
     def __unicode__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return reverse('hosts:detail', kwargs={'id': self.id})
+
+    def packages(self):
+        # get all the packages which should be installed in this host
+        dependencies = []
+        for instance in self.instance_set.all().select_related():
+            for dep in instance.project.dependencies.all():
+                if dep not in dependencies:
+                    dependencies.append(dep)
+        return dependencies
+
     class Meta:
         ordering = ['name']
 
@@ -112,6 +124,15 @@ class Dependency(models.Model):
     package_name = models.SlugField(max_length=255, null=True, blank=True)
     pip_package_name = models.SlugField(max_length=255)
     version = models.CharField(max_length=255, null=True, blank=True)
+
+    @property
+    def url(self):
+        url = None
+        if self.pip_package_name[:3] != 'git':
+            url = 'https://pypi.python.org/pypi/%s' % self.pip_package_name
+            if self.version:
+                url += '/%s' % self.version
+        return url or self.pip_package_name.split('git+')[-1]
 
     def dependent_project_count(self):
         return self.project_set.count()

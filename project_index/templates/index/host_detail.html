@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	<h1>{{ host.name }}</h1>
+	{% with host.instance_set.all as instances %}
+		{% if instances %}
+		<h2>Projects</h2>
+		<div class="list-group">
+		{% for instance in instances %}
+			<a class="list-group-item" href="{{ instance.url }}">
+				{{ instance.project.name }}: {{ instance.get_instance_type_display }}
+			</a>
+		{% endfor %}
+		</div>
+		{% endif%}
+	{% endwith %}
+
+	{% with host.packages as packages %}
+		{% if packages %}
+		<h2>Python Packages</h2>
+		<div class="list-group">
+			{% for package in packages %}
+				<a class="list-group-item" href="{{ package.url }}">{{ package.name }} {% if package.version %}({{ package.version }}){% endif %}</a>
+			{% endfor %}
+		</div>
+		{% endif %}
+	{% endwith %}
+{% endblock %}
+

@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Hosts</h1>
+
+<div class="list-group">
+	{% for host in hosts %}
+		<a class="list-group-item" href="{{ host.get_absolute_url }}">{{ host.name }}</a>
+	{% endfor %}
+</div>
+{% endblock %}
