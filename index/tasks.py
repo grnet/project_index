@@ -44,7 +44,7 @@ def get_requirements(project):
                             parse_dependencies(r, project)
                         shutil.rmtree(repo.path)
                         return True
-    elif project.dependency_file:
+    if project.dependency_file:
         for l in project.dependency_file.readlines():
             parse_dependencies(l, project)
         return True
