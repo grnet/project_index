@@ -4,7 +4,6 @@ from django.db import models
 from django.core.urlresolvers import reverse
 from django.dispatch import receiver
 from django.db.models.signals import post_save
-from django.core.exceptions import ValidationError
 from index.tasks import get_requirements
 
 join = os.path.join
