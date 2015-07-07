@@ -5,6 +5,11 @@
 	{% if cronjob.project %}
 		For <a href="{{ project.get_absolute_url }}">{{ cronjob.project }}</a> project.
 	{% endif %}
+	{% if cronjob.description %}
+	<p>
+		{{ cronjob.description }}
+	</p>
+	{% endif %}
 	<h2>Command</h2>
 	{{ cronjob.cron_command }}
 	<h2>Hosts</h2>
