@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	<h1>{{ cronjob.name }}</h1>
+	{% if cronjob.project %}
+		For <a href="{{ project.get_absolute_url }}">{{ cronjob.project }}</a> project.
+	{% endif %}
+	<h2>Command</h2>
+	{{ cronjob.cron_command }}
+	<h2>Hosts</h2>
+	{% for host in cronjob.hosts.all %}
+		<a class="list-group-item" href="{{ host.get_absolute_url }}">{{ host.name }}</a>
+	{% endfor %}
+{% endblock %}

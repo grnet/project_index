@@ -143,6 +143,33 @@ class Dependency(models.Model):
         ordering = ['name']
 
 
+class Cronjob(models.Model):
+    name = models.CharField(max_length=255)
+    project = models.ForeignKey(Project, null=True, blank=True)
+    command = models.CharField(max_length=255)
+    hosts = models.ManyToManyField(Host)
+    period = models.CharField(max_length=255)
+    user = models.CharField(max_length=255, blank=True, null=True)
+    description = models.TextField(null=True, blank=True)
+
+    def get_absolute_url(self):
+        return reverse('cronjobs:detail', kwargs={'id': self.id})
+
+    def __unicode__(self):
+        return self.name
+
+    @property
+    def cron_command(self):
+        return '%s %s %s' % (self.period, self.user or '', self.command)
+
+    @property
+    def host_list(self):
+        result = []
+        for host in self.hosts.all():
+            result.append(host.name)
+        return ', '.join(result)
+
+
 @receiver(post_save)
 def get_dependencies(sender, instance, created, *args, **kwargs):
     if sender == Project:

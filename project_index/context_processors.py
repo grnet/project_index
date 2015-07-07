@@ -15,6 +15,7 @@ def menu(request):
         {'url': reverse('list'), 'name': 'Projects'},
         {'url': reverse('tags:list'), 'name': 'Tags'},
         {'url': reverse('hosts:list'), 'name': 'Hosts'},
+        {'url': reverse('cronjobs:list'), 'name': 'Cronjobs'},
     ]
     for m in menu:
         if m.get('url') == path:

@@ -1,5 +1,14 @@
 from django.contrib import admin
-from index.models import Project, Repository, Instance, Tag, Docs, Host, Dependency
+from index.models import (
+    Project,
+    Repository,
+    Instance,
+    Tag,
+    Docs,
+    Host,
+    Dependency,
+    Cronjob
+)
 
 
 class RepositoryInline(admin.TabularInline):
@@ -17,6 +26,11 @@ class DocsInline(admin.TabularInline):
     model = Docs
 
 
+class CronjobInline(admin.TabularInline):
+    extra = 0
+    model = Cronjob
+
+
 class ProjectAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
     list_display = ('name', 'hosts')
@@ -24,7 +38,8 @@ class ProjectAdmin(admin.ModelAdmin):
     inlines = [
         RepositoryInline,
         InstanceInline,
-        DocsInline
+        DocsInline,
+        CronjobInline,
     ]
 
 
@@ -34,4 +49,5 @@ class DependencyAdmin(admin.ModelAdmin):
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(Tag)
 admin.site.register(Host)
+admin.site.register(Cronjob)
 admin.site.register(Dependency, DependencyAdmin)
