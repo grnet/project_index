@@ -7,7 +7,8 @@ from index.models import (
     Docs,
     Host,
     Dependency,
-    Cronjob
+    Cronjob,
+    Virtualenv
 )
 
 
@@ -50,4 +51,5 @@ admin.site.register(Project, ProjectAdmin)
 admin.site.register(Tag)
 admin.site.register(Host)
 admin.site.register(Cronjob)
+admin.site.register(Virtualenv)
 admin.site.register(Dependency, DependencyAdmin)

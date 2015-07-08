@@ -2,7 +2,7 @@
 
 {% block content %}
 {% if cronjobs %}
-	<h1>Cronjobs</h1>
+	<h1>{{ cronjobs.count }} Cronjobs</h1>
 	<div class="list-group">
 		{% for cronjob in cronjobs %}
 			<a class="list-group-item" href="{{ cronjob.get_absolute_url }}">{{ cronjob.name }} @ {{ cronjob.host_list }}</a>

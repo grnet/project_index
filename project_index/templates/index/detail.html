@@ -6,58 +6,81 @@
 <h1>{{ project.name }}</h1>
 <h2>Description</h2>
 	{% autoescape off %}
-	{% markdown %}{{ project.description }}{% endmarkdown %}
+		{% markdown %}{{ project.description }}{% endmarkdown %}
 	{% endautoescape %}
-{% with project.doc_set.all as docs %}
-	{% if docs %}
-		<h2>Docs</h2>
-		<div class="list-group">
-		{% for doc in  docs %}
-			<a class="list-group-item" href="{{ doc.url }}">{{ doc.name }}</a>
-		{% endfor %}
-		</div>
-	{% endif %}
-{% endwith %}
-{% with project.instance_set.all as instances %}
-	{% if instances %}
-		<h2>Instances</h2>
-		<div class="list-group">
-		{% for instance in instances %}
-			<a class="list-group-item" href="{{ instance.url }}">{{ instance.instance_type }} ({{ instance.description }}) path: {{ instance.path }} {% if instance.host %}host: {{ instance.host }}{% endif %}</a>
-		{% endfor %}
-		</div>
-	{% endif %}
-{% endwith %}
-{% with project.repository_set.all as repos %}
-	{% if repos %}
-		<h2>Repositories</h2>
-		<div class="list-group">
-			{% for repo in repos %}
-				<a class="list-group-item" href="{{ repo.url }}">{{ repo }}</a>
+
+	{% with project.doc_set.all as docs %}
+		{% if docs %}
+			<h2>Docs</h2>
+			<div class="list-group">
+			{% for doc in  docs %}
+				<a class="list-group-item" href="{{ doc.url }}">{{ doc.name }}</a>
 			{% endfor %}
-		</div>
-	{% endif %}
-{% endwith %}
+			</div>
+		{% endif %}
+	{% endwith %}
 
-{% with project.dependencies.all as dependencies %}
-	{% if dependencies %}
-		<h2>Dependencies</h2>
-		<div class="list-group">
-		{% for dependency in dependencies %}
-			<a class="list-group-item" href="{{ dependency.url }}">{{ dependency.name }} {% if dependency.version %}({{ dependency.version }}){% endif %}</a>
-		{% endfor %}
-		</div>
-	{% endif%}
-{% endwith %}
+	{% with project.instance_set.all as instances %}
+		{% if instances %}
+			<h2>Instances ({{ instances.count }})</h2>
+			<div>
+			{% for instance in instances %}
+				<h3><a href="{{ instance.url }}">{{ instance.instance_type }}</a></h3>
+				<p>
+					{{ instance.description }}
+				</p>
+				<ul class="list-group">
+					<li class="list-group-item">path: {{ instance.path }}</li>
+					<li class="list-group-item">{% if instance.host %}host: {{ instance.host }}{% endif %}</li>
+					<li class="list-group-item">{% if instance.virtualenv %} Virtualenv: {{ instance.virtualenv.name }}{% endif %}</li>
+				</ul>
+			{% endfor %}
+			</div>
+		{% endif %}
+	{% endwith %}
 
-{% with project.tag.all as tags %}
-	{% if tags %}
-		<h2>Tags</h2>
-		<div class="list-group">
-		{% for tag in tags %}
-			<a class="list-group-item" href="{{ tag.get_absolute_url }}">{{ tag }}</a>
-		{% endfor %}
-		</div>
-	{% endif%}
-{% endwith %}
+	{% with project.repository_set.all as repos %}
+		{% if repos %}
+			<h2>Repositories ({{ repos.count }})</h2>
+			<div class="list-group">
+				{% for repo in repos %}
+					<a class="list-group-item" href="{{ repo.url }}">{{ repo }}</a>
+				{% endfor %}
+			</div>
+		{% endif %}
+	{% endwith %}
+
+	{% with project.dependencies.all as dependencies %}
+		{% if dependencies %}
+			<h2>Dependencies ({{ dependencies.count }})</h2>
+			<div class="list-group">
+			{% for dependency in dependencies %}
+				<a class="list-group-item" href="{{ dependency.url }}">{{ dependency.name }} {% if dependency.version %}({{ dependency.version }}){% endif %}</a>
+			{% endfor %}
+			</div>
+		{% endif%}
+	{% endwith %}
+
+	{% with project.cronjob_set.all as cronjobs %}
+		{% if cronjobs %}
+			<h2>Cronjobs ({{ cronjobs.count }})</h2>
+			<div class="list-group">
+			{% for cronjob in cronjobs %}
+				<a class="list-group-item" href="{{ cronjob.get_absolute_url }}">{{ cronjob }}</a>
+			{% endfor %}
+			</div>
+		{% endif%}
+	{% endwith %}
+
+
+	{% with project.tag.all as tags %}
+		{% if tags %}
+			<h2>Tags ({{ tags.count }})</h2>
+			<div class="list-group">
+			{% for tag in tags %}
+				<a class="list-group-item" href="{{ tag.get_absolute_url }}">{{ tag }}</a>
+			{% endfor %}
+			</div>
+		{% endif%}
+	{% endwith %}
 {% endblock %}

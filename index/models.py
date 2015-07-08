@@ -73,6 +73,13 @@ class Host(models.Model):
         ordering = ['name']
 
 
+class Virtualenv(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __unicode__(self):
+        return self.name
+
+
 class Instance(models.Model):
     instance_type = models.CharField(
         choices=(
@@ -87,6 +94,7 @@ class Instance(models.Model):
     description = models.TextField(blank=True)
     project = models.ForeignKey(Project)
     host = models.ForeignKey(Host, null=True, blank=True)
+    virtualenv = models.ForeignKey(Virtualenv, null=True, blank=True)
 
     def __unicode__(self):
         return '%s, %s, %s' % (
