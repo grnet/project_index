@@ -83,4 +83,18 @@
 			</div>
 		{% endif%}
 	{% endwith %}
+
+	{% with project.note_set.all as notes %}
+		{% if notes %}
+			<h2>notes ({{ notes.count }})</h2>
+			{% for note in notes %}
+				<h3>{{ note.title }}</h3>
+				<p>
+					{% autoescape off %}
+						{% markdown %}{{ note.description }}{% endmarkdown %}
+					{% endautoescape %}
+				</p>
+			{% endfor %}
+		{% endif%}
+	{% endwith %}
 {% endblock %}

@@ -10,11 +10,17 @@ from index.models import (
     Cronjob,
     Virtualenv
 )
+from notes.models import Note
 
 
 class RepositoryInline(admin.TabularInline):
     extra = 0
     model = Repository
+
+
+class NoteInline(admin.TabularInline):
+    extra = 0
+    model = Note
 
 
 class InstanceInline(admin.TabularInline):
@@ -41,6 +47,7 @@ class ProjectAdmin(admin.ModelAdmin):
         InstanceInline,
         DocsInline,
         CronjobInline,
+        NoteInline,
     ]
 
 
