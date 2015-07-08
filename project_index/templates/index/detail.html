@@ -31,8 +31,8 @@
 				</p>
 				<ul class="list-group">
 					<li class="list-group-item">path: {{ instance.path }}</li>
-					<li class="list-group-item">{% if instance.host %}host: {{ instance.host }}{% endif %}</li>
-					<li class="list-group-item">{% if instance.virtualenv %} Virtualenv: {{ instance.virtualenv.name }}{% endif %}</li>
+					{% if instance.host %}<li class="list-group-item">host: {{ instance.host }}</li>{% endif %}
+					{% if instance.virtualenv %}<li class="list-group-item"> Virtualenv: {{ instance.virtualenv.name }}</li>{% endif %}
 				</ul>
 			{% endfor %}
 			</div>
@@ -86,7 +86,7 @@
 
 	{% with project.note_set.all as notes %}
 		{% if notes %}
-			<h2>notes ({{ notes.count }})</h2>
+			<h2>Notes ({{ notes.count }})</h2>
 			{% for note in notes %}
 				<h3>{{ note.title }}</h3>
 				<p>
