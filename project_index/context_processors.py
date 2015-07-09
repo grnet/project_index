@@ -11,7 +11,6 @@ def branding(request):
 def menu(request):
     path = request.path
     menu = [
-        {'url': reverse('notes:list'), 'name': 'Notes'},
         {'url': reverse('list'), 'name': 'Projects'},
         {'url': reverse('tags:list'), 'name': 'Tags'},
         {'url': reverse('hosts:list'), 'name': 'Hosts'},

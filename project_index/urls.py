@@ -29,7 +29,6 @@ urlpatterns = patterns(
     url(r'^', include(index_urls)),
     url(r'^tags/', include(tags_urls, namespace='tags')),
     url(r'^hosts/', include(hosts_urls, namespace='hosts')),
-    url(r'^notes/', include(notes_urls, namespace='notes')),
     url(r'^cronjobs/', include(cronjob_urls, namespace='cronjobs')),
     url(r'^admin/', include(admin.site.urls)),
 )
