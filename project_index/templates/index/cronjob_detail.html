@@ -4,7 +4,7 @@
 <h1>{% if request.user.is_superuser %}<a href="{% url admin:index_cronjob_change cronjob.id %}"><i class="fa fa-pencil"></i>
 </a>{% endif %} {{ cronjob.name }}</h1>
 	{% if cronjob.project %}
-		For <a href="{{ project.get_absolute_url }}">{{ cronjob.project|title }}</a> project.
+		For <a href="{{ cronjob.project.get_absolute_url }}">{{ cronjob.project|title }}</a> project.
 	{% endif %}
 	{% if cronjob.description %}
 	<p>
