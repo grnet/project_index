@@ -3,7 +3,7 @@ import os
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.dispatch import receiver
-from django.db.models.signals import post_save, pre_save
+from django.db.models.signals import post_save
 from index.tasks import get_requirements, get_readme
 
 join = os.path.join
@@ -12,10 +12,18 @@ join = os.path.join
 class Project(models.Model):
     name = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255)
-    description = models.TextField(help_text=u'Auto generated if blank and repo is public', null=True, blank=True)
+    description = models.TextField(
+        help_text=u'Auto generated if blank and repo is public',
+        null=True,
+        blank=True
+    )
     tag = models.ManyToManyField('Tag')
     dependencies = models.ManyToManyField('Dependency', null=True, blank=True)
-    dependency_file = models.FileField(upload_to='dependencies', null=True, blank=True)
+    dependency_file = models.FileField(
+        upload_to='dependencies',
+        null=True,
+        blank=True
+    )
     public = models.BooleanField(default=True)
 
     def get_dependencies(self):
