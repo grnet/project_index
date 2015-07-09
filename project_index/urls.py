@@ -20,15 +20,14 @@ from index.urls import project_urls as index_urls
 from index.urls import tags_urls
 from index.urls import hosts_urls
 from index.urls import cronjob_urls
-from notes import urls as notes_urls
 
 admin.autodiscover()
 
 urlpatterns = patterns(
     '',
+    url(r'^admin/', include(admin.site.urls)),
     url(r'^', include(index_urls)),
     url(r'^tags/', include(tags_urls, namespace='tags')),
     url(r'^hosts/', include(hosts_urls, namespace='hosts')),
     url(r'^cronjobs/', include(cronjob_urls, namespace='cronjobs')),
-    url(r'^admin/', include(admin.site.urls)),
 )

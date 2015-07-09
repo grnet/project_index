@@ -2,10 +2,13 @@
 
 {% block content %}
 {% if cronjobs %}
-	<h1>{{ cronjobs.count }} Cronjobs</h1>
+	<h1>{{ cronjobs.count }} Cronjobs </h1>
 	<div class="list-group">
+		{% if request.user.is_superuser %}
+			<a class="list-group-item" href="{% url admin:index_cronjob_add %}"><i class="fa fa-plus"></i></a>
+		{% endif %}
 		{% for cronjob in cronjobs %}
-			<a class="list-group-item" href="{{ cronjob.get_absolute_url }}">{{ cronjob.name }} @ {{ cronjob.host_list }}</a>
+			<a class="list-group-item" href="{{ cronjob.get_absolute_url }}">{{ cronjob.name }} @ {{ cronjob.host_list }} {% if cronjob.project %} for {{cronjob.project}}{% endif %}.</a>
 		{% endfor %}
 	</div>
 {% else %}

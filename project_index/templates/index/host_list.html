@@ -5,6 +5,9 @@
 <h1>{{ hosts.count }} Hosts</h1>
 
 <div class="list-group">
+	{% if request.user.is_superuser %}
+		<a class="list-group-item" href="{% url admin:index_host_add %}"><i class="fa fa-plus"></i></a>
+	{% endif %}
 	{% for host in hosts %}
 		<a class="list-group-item" href="{{ host.get_absolute_url }}">{{ host.name }}</a>
 	{% endfor %}

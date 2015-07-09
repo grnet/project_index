@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 
 {% block content %}
-	<h1>{{ host.name }}</h1>
+	<h1>{% if request.user.is_superuser %}<a href="{% url admin:index_host_change host.id %}"><i class="fa fa-pencil"></i>
+</a>{% endif %}{{ host.name }}</h1>
 	{% with host.instance_set.all as instances %}
 		{% if instances %}
 		<h2>Projects ({{ instances.count }})</h2>
