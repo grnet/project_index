@@ -15,6 +15,6 @@
 	{{ cronjob.cron_command }}
 	<h2>Hosts</h2>
 	{% for host in cronjob.hosts.all %}
-		<a class="list-group-item" href="{{ host.get_absolute_url }}">{{ host.name|title }}</a>
+		<a class="list-group-item" href="{{ host.get_absolute_url }}">{{ host.name }}</a>
 	{% endfor %}
 {% endblock %}
