@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-	<h1>{% if request.user.is_superuser %}<a href="{% url admin:index_tag_change tag.id %}"><i class="fa fa-pencil"></i>
+	<h1>{% if request.user.is_superuser %}<a href="{% url 'admin:index_tag_change' tag.id %}"><i class="fa fa-pencil"></i>
 </a>{% endif %}{{ tag.name }}</h1>
 	{% with tag.project_set.all as projects %}
 		{% if projects %}

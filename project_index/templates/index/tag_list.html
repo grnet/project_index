@@ -5,7 +5,7 @@
 
 <div class="list-group">
 	{% if request.user.is_superuser %}
-		<a class="list-group-item" href="{% url admin:index_tag_add %}"><i class="fa fa-plus"></i></a>
+		<a class="list-group-item" href="{% url 'admin:index_tag_add' %}"><i class="fa fa-plus"></i></a>
 	{% endif %}
 	{% for tag in tags %}
 		<a class="list-group-item" href="{{ tag.get_absolute_url }}">{{ tag.name }}</a>

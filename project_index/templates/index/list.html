@@ -5,7 +5,7 @@
 <h1> {{ projects|length }} Projects</h1>
 <div class="list-group">
 	{% if request.user.is_superuser %}
-		<a class="list-group-item" href="{% url admin:index_project_add %}"><i class="fa fa-plus"></i></a>
+		<a class="list-group-item" href="{% url 'admin:index_project_add' %}"><i class="fa fa-plus"></i></a>
 	{% endif %}
 	{% for project in projects %}
 		<a class="list-group-item" href="{{ project.get_absolute_url }}">{{ project.name|title }}</a>

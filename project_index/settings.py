@@ -100,7 +100,6 @@ INSTALLED_APPS = (
     'index',
     'notes',
     'markdown_deux',
-    'south',
     'djcelery',
     'kombu.transport.django',
 )
