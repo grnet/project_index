@@ -4,7 +4,7 @@
 
 {% block content %}
 <h1>{% if request.user.is_superuser %}<a href="{% url admin:index_project_change project.id %}"><i class="fa fa-pencil"></i>
-</a>{% endif %}{{ project.name }}</h1>
+</a>{% endif %}{{ project.name|title }}</h1>
 <h2>Description</h2>
 	{% autoescape off %}
 		{% markdown %}{{ project.description }}{% endmarkdown %}

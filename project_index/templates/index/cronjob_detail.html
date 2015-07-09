@@ -4,7 +4,7 @@
 <h1>{% if request.user.is_superuser %}<a href="{% url admin:index_cronjob_change cronjob.id %}"><i class="fa fa-pencil"></i>
 </a>{% endif %} {{ cronjob.name }}</h1>
 	{% if cronjob.project %}
-		For <a href="{{ project.get_absolute_url }}">{{ cronjob.project }}</a> project.
+		For <a href="{{ project.get_absolute_url }}">{{ cronjob.project|title }}</a> project.
 	{% endif %}
 	{% if cronjob.description %}
 	<p>
@@ -15,6 +15,6 @@
 	{{ cronjob.cron_command }}
 	<h2>Hosts</h2>
 	{% for host in cronjob.hosts.all %}
-		<a class="list-group-item" href="{{ host.get_absolute_url }}">{{ host.name }}</a>
+		<a class="list-group-item" href="{{ host.get_absolute_url }}">{{ host.name|title }}</a>
 	{% endfor %}
 {% endblock %}

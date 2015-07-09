@@ -3,8 +3,8 @@ import os
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.dispatch import receiver
-from django.db.models.signals import post_save
-from index.tasks import get_requirements
+from django.db.models.signals import post_save, pre_save
+from index.tasks import get_requirements, get_readme
 
 join = os.path.join
 
@@ -12,13 +12,16 @@ join = os.path.join
 class Project(models.Model):
     name = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255)
-    description = models.TextField()
+    description = models.TextField(help_text=u'Auto generated if blank and repo is public', null=True, blank=True)
     tag = models.ManyToManyField('Tag')
     dependencies = models.ManyToManyField('Dependency', null=True, blank=True)
     dependency_file = models.FileField(upload_to='dependencies', null=True, blank=True)
 
     def get_dependencies(self):
         return get_requirements.delay(self)
+
+    def get_readme(self):
+        return get_readme.delay(self)
 
     @property
     def hosts(self):
@@ -196,3 +199,5 @@ class Cronjob(models.Model):
 def get_dependencies(sender, instance, created, *args, **kwargs):
     if sender == Project:
         instance.get_dependencies()
+        if not instance.description:
+            instance.get_readme()
