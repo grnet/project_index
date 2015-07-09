@@ -4,7 +4,7 @@
 	<h1>{{ host.name }}</h1>
 	{% with host.instance_set.all as instances %}
 		{% if instances %}
-		<h2>Projects</h2>
+		<h2>Projects ({{ instances.count }})</h2>
 		<div class="list-group">
 		{% for instance in instances %}
 			<a class="list-group-item" href="{{ instance.url }}">
@@ -17,7 +17,7 @@
 
 	{% with host.packages as packages %}
 		{% if packages %}
-		<h2>Python Packages</h2>
+		<h2>Python Packages ({{ packages.count }})</h2>
 		<div class="list-group">
 			{% for package in packages %}
 				<a class="list-group-item" href="{{ package.url }}">{{ package.name }} {% if package.version %}({{ package.version }}){% endif %}</a>
@@ -28,7 +28,7 @@
 
 	{% with host.cronjob_set.all as cronjobs %}
 		{% if cronjobs %}
-		<h2>Cronjobs</h2>
+		<h2>Cronjobs ({{ cronjobs.count }})</h2>
 		<div class="list-group">
 			{% for cronjob in cronjobs %}
 				<a class="list-group-item" href="{{ cronjob.get_absolute_url }}">{{ cronjob.name }}</a>
