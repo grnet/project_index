@@ -54,6 +54,20 @@ class Repository(models.Model):
 class Host(models.Model):
     name = models.CharField(max_length=255)
 
+    @property
+    def cronjob_list(self):
+        result = []
+        for cronjob in self.cronjob_set.all():
+            result.append(cronjob.name)
+        return ', '.join(result)
+
+    @property
+    def project_list(self):
+        result = []
+        for project in self.instance_set.all().select_related():
+            result.append('%s (%s)' % (project.project.name, project.instance_type))
+        return ', '.join(result)
+
     def __unicode__(self):
         return self.name
 

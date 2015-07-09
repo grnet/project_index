@@ -38,6 +38,11 @@ class CronjobInline(admin.TabularInline):
     model = Cronjob
 
 
+class CronjobTroughInline(admin.TabularInline):
+    extra = 0
+    model = Cronjob.hosts.through
+
+
 class ProjectAdmin(admin.ModelAdmin):
     search_fields = ['name']
     prepopulated_fields = {'slug': ('name',)}
@@ -58,6 +63,12 @@ class TagAdmin(admin.ModelAdmin):
 
 class HostAdmin(admin.ModelAdmin):
     search_fields = ['name']
+    list_filter = ('instance__project__name', )
+    list_display = ('name', 'cronjob_list', 'project_list')
+    inlines = [
+        InstanceInline,
+        CronjobTroughInline,
+    ]
 
 
 class CronjobAdmin(admin.ModelAdmin):
