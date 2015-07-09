@@ -16,6 +16,7 @@ class Project(models.Model):
     tag = models.ManyToManyField('Tag')
     dependencies = models.ManyToManyField('Dependency', null=True, blank=True)
     dependency_file = models.FileField(upload_to='dependencies', null=True, blank=True)
+    public = models.BooleanField(default=True)
 
     def get_dependencies(self):
         return get_requirements.delay(self)

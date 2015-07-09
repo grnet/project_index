@@ -28,6 +28,13 @@ def parse_dependencies(line, project):
 
 @shared_task
 def get_requirements(project):
+    '''
+    This function tries to get the content of the requirements file.
+    If it does, then it updates the requirements. In case we cant access the
+    repository we will try to see if the user has uploaded a requirements.txt
+    by himself.
+    It runs every time a project is saved, on post save hook.
+    '''
     repos = project.repository_set.all()
     if repos:
         for repository in repos:
@@ -36,6 +43,10 @@ def get_requirements(project):
                 try:
                     repo = Gittle.clone(repository.url, path, bare=True)
                 except:
+                    # We use update, because we want to bypass
+                    # the post_save function.
+                    from index.models import Project
+                    Project.objects.filter(id=project.id).update(public=False)
                     pass
                 else:
                     requirements = repo.file_versions('requirements.txt')
@@ -68,6 +79,10 @@ def get_readme(project):
                 try:
                     repo = Gittle.clone(repository.url, path, bare=True)
                 except:
+                    # We use update, because we want to bypass
+                    # the post_save function.
+                    from index.models import Project
+                    Project.objects.filter(id=project.id).update(public=False)
                     pass
                 else:
                     readme = repo.file_versions('README.md')
