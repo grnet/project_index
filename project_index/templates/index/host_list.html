@@ -2,7 +2,7 @@
 
 {% block content %}
 {% if hosts %}
-<h1>{{ hosts.count }} Hosts</h1>
+<h1>{{ hosts|length }} Hosts</h1>
 
 <div class="list-group">
 	{% if request.user.is_superuser %}

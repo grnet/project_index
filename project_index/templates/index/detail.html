@@ -23,7 +23,7 @@
 
 	{% with project.instance_set.all as instances %}
 		{% if instances %}
-			<h2>Instances ({{ instances.count }})</h2>
+			<h2>Instances ({{ instances|length }})</h2>
 			<div>
 			{% for instance in instances %}
 				<h3><a href="{{ instance.url }}">{{ instance.get_instance_type_display }}</a></h3>
@@ -42,7 +42,7 @@
 
 	{% with project.repository_set.all as repos %}
 		{% if repos %}
-			<h2>Repositories ({{ repos.count }})</h2>
+			<h2>Repositories ({{ repos|length }})</h2>
 			<div class="list-group">
 				{% for repo in repos %}
 					<a class="list-group-item" href="{{ repo.url }}">{{ repo }}</a>
@@ -53,7 +53,7 @@
 
 	{% with project.dependencies.all as dependencies %}
 		{% if dependencies %}
-			<h2>Dependencies ({{ dependencies.count }})</h2>
+			<h2>Dependencies ({{ dependencies|length }})</h2>
 			<div class="list-group">
 			{% for dependency in dependencies %}
 				<a class="list-group-item" href="{{ dependency.url }}">{{ dependency.name }} {% if dependency.version %}({{ dependency.version }}){% endif %}</a>
@@ -64,7 +64,7 @@
 
 	{% with project.cronjob_set.all as cronjobs %}
 		{% if cronjobs %}
-			<h2>Cronjobs ({{ cronjobs.count }})</h2>
+			<h2>Cronjobs ({{ cronjobs|length }})</h2>
 			<div class="list-group">
 			{% for cronjob in cronjobs %}
 				<a class="list-group-item" href="{{ cronjob.get_absolute_url }}">{{ cronjob }}</a>
@@ -76,7 +76,7 @@
 
 	{% with project.tag.all as tags %}
 		{% if tags %}
-			<h2>Tags ({{ tags.count }})</h2>
+			<h2>Tags ({{ tags|length }})</h2>
 			<div class="list-group">
 			{% for tag in tags %}
 				<a class="list-group-item" href="{{ tag.get_absolute_url }}">{{ tag }}</a>
@@ -87,7 +87,7 @@
 
 	{% with project.note_set.all as notes %}
 		{% if notes %}
-			<h2>Notes ({{ notes.count }})</h2>
+			<h2>Notes ({{ notes|length }})</h2>
 			{% for note in notes %}
 				<h3>{{ note.title }}</h3>
 				<p>

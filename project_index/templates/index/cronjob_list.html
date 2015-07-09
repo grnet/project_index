@@ -2,7 +2,7 @@
 
 {% block content %}
 {% if cronjobs %}
-	<h1>{{ cronjobs.count }} Cronjobs </h1>
+	<h1>{{ cronjobs|length }} Cronjobs </h1>
 	<div class="list-group">
 		{% if request.user.is_superuser %}
 			<a class="list-group-item" href="{% url admin:index_cronjob_add %}"><i class="fa fa-plus"></i></a>
