@@ -18,7 +18,7 @@
 
 	{% with host.packages as packages %}
 		{% if packages %}
-		<h2>Python Packages ({{ packages.count }})</h2>
+		<h2>Python Packages ({{ packages|length }})</h2>
 		<div class="list-group">
 			{% for package in packages %}
 				<a class="list-group-item" href="{{ package.url }}">{{ package.name }} {% if package.version %}({{ package.version }}){% endif %}</a>
