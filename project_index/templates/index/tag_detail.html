@@ -18,7 +18,17 @@
 		<h2>notes</h2>
 		<div class="list-group">
 		{% for note in notes %}
-			<a class="list-group-item" href="{{ note.get_absolute_url }}">{{ note }}</a>
+			{% if notes %}
+				<h2>Notes ({{ notes|length }})</h2>
+				{% for note in notes %}
+					<h1>{{ note.title }}</h1>
+					<p>
+						{% autoescape off %}
+							{% markdown %}{{ note.description }}{% endmarkdown %}
+						{% endautoescape %}
+					</p>
+				{% endfor %}
+			{% endif%}
 		{% endfor %}
 		</div>
 		{% endif%}
