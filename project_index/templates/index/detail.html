@@ -89,7 +89,7 @@
 		{% if notes %}
 			<h2>Notes ({{ notes|length }})</h2>
 			{% for note in notes %}
-				<h3>{{ note.title }}</h3>
+				<h1>{{ note.title }}</h1>
 				<p>
 					{% autoescape off %}
 						{% markdown %}{{ note.description }}{% endmarkdown %}
