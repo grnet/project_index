@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load markdown_deux_tags %}
 
 {% block content %}
 	<h1>{% if request.user.is_superuser %}<a href="{% url 'admin:index_tag_change' tag.id %}"><i class="fa fa-pencil"></i>
