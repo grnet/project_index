@@ -87,6 +87,7 @@ class DependencyAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Project, ProjectAdmin)
+admin.site.register(Instance)
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Host, HostAdmin)
 admin.site.register(Cronjob, CronjobAdmin)
