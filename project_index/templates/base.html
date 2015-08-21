@@ -29,6 +29,7 @@
 							{{ branding.project_name }}
 						</a>
 				    </div>
+				    {% block menu %}
 			        <div id="navbar" class="navbar-collapse collapse">
 						<ul class="nav navbar-nav">
 							{% for item in menu %}
@@ -36,6 +37,7 @@
 							{% endfor %}
 						</ul>
 					</div><!--/.nav-collapse -->
+					{% endblock %}
 				</div>
 			</nav>
 		</header>
