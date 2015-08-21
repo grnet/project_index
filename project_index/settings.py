@@ -51,6 +51,7 @@ STATICFILES_DIRS = [
     os.path.join(PROJECT_DIR, 'static'),
 ]
 
+CELERYD_TASK_TIME_LIMIT = 600
 
 # List of finder classes that know how to find static files in
 # various locations.
