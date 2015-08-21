@@ -76,7 +76,8 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'maintenancemode.middleware.MaintenanceModeMiddleware',
+    # Uncomment the next line for simple clickjacking protection:
+    # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
 
@@ -102,7 +103,6 @@ INSTALLED_APPS = (
     'markdown_deux',
     'djcelery',
     'kombu.transport.django',
-    'maintenancemode',
 )
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
