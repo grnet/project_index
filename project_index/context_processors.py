@@ -15,6 +15,7 @@ def menu(request):
         {'url': reverse('tags:list'), 'name': 'Tags'},
         {'url': reverse('hosts:list'), 'name': 'Hosts'},
         {'url': reverse('cronjobs:list'), 'name': 'Cronjobs'},
+        #{'url': reverse('databases:list'), 'name': 'Databases'}, # comment out if you want to display Databases Lists. Not implemented yet.
     ]
     for m in menu:
         if m.get('url') == path:

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<h1> {{ databases|length }} Databases</h1>
+<div class="list-group">
+	{% if request.user.is_superuser %}
+		<a class="list-group-item" href="{% url 'admin:index_database_add' %}"><i class="fa fa-plus"></i></a>
+	{% endif %}
+	{% for database in databases %}
+		<span class="list-group-item">{{ database.name }}</span>
+	{% endfor %}
+</div>
+{% endblock %}

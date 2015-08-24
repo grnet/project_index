@@ -34,6 +34,11 @@
 					<li class="list-group-item">path: {{ instance.path }}</li>
 					{% if instance.host %}<li class="list-group-item">host: {{ instance.host }}</li>{% endif %}
 					{% if instance.virtualenv %}<li class="list-group-item"> Virtualenv: {{ instance.virtualenv.name }}</li>{% endif %}
+					{% with instance.database_set.all as dbs %}
+						{% if dbs%}
+							{% for db in dbs %}<li class="list-group-item"> db: {{ db.name }} host: {{ db.host }} user: {{ db.user }} port: {{ db.port }}</li>{% endfor %}
+						{% endif %}
+					{% endwith %}
 				</ul>
 			{% endfor %}
 			</div>

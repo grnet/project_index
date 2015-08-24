@@ -8,7 +8,6 @@ from index.tasks import get_requirements, get_readme
 
 join = os.path.join
 
-
 class Project(models.Model):
     name = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255)
@@ -203,6 +202,17 @@ class Cronjob(models.Model):
             result.append(host.name)
         return ', '.join(result)
 
+class Database(models.Model):
+    name = models.CharField(max_length=255)
+    user = models.CharField(max_length=255, blank=True)
+    passwd = models.CharField(max_length=255, blank=True)
+    host = models.CharField(max_length=255, blank=True)
+    port = models.IntegerField(max_length=255, blank=True)
+    app_name = models.CharField(max_length=255, blank=True)
+    instance = models.ForeignKey(Instance)
+
+    def __unicode__(self):
+        return self.name
 
 @receiver(post_save)
 def get_dependencies(sender, instance, created, *args, **kwargs):

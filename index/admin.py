@@ -1,3 +1,4 @@
+from django import forms
 from django.contrib import admin
 from index.models import (
     Project,
@@ -8,7 +9,8 @@ from index.models import (
     Host,
     Dependency,
     Cronjob,
-    Virtualenv
+    Virtualenv,
+    Database
 )
 from notes.models import Note
 
@@ -85,7 +87,16 @@ class DependencyAdmin(admin.ModelAdmin):
     search_fields = ['name']
     list_display = ('name', 'version', 'dependent_project_count')
 
+from django.forms import ModelForm, PasswordInput
 
+class AdminDatabaseForm(forms.ModelForm):
+    passwd = forms.CharField(widget=PasswordInput(), required=False)
+
+class DatabaseAdmin(admin.ModelAdmin):
+    form = AdminDatabaseForm
+
+
+admin.site.register(Database, DatabaseAdmin)
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(Instance)
 admin.site.register(Tag, TagAdmin)
