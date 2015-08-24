@@ -57,6 +57,7 @@ class Repository(models.Model):
     name = models.CharField(max_length=255)
     url = models.URLField(null=True, blank=True)
     project = models.ForeignKey(Project)
+    public = models.BooleanField(default=True)
 
     def __unicode__(self):
         return self.name
