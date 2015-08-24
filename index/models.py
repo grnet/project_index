@@ -11,6 +11,8 @@ join = os.path.join
 class Project(models.Model):
     name = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255)
+    related_project = models.ForeignKey('self', null=True, blank=True)
+
     description = models.TextField(
         help_text=u'Auto generated if blank and repo is public',
         null=True,
