@@ -49,7 +49,7 @@ class ProjectAdmin(admin.ModelAdmin):
     search_fields = ['name']
     prepopulated_fields = {'slug': ('name',)}
     list_display = ('name', 'hosts')
-    list_filter = ('tag',)
+    list_filter = ('tag', 'instance__host')
     inlines = [
         RepositoryInline,
         InstanceInline,
