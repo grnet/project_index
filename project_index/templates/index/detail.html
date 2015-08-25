@@ -61,7 +61,7 @@
 			<h2>Dependencies ({{ dependencies|length }})</h2>
 			<div class="list-group">
 			{% for dependency in dependencies %}
-				<a class="list-group-item" href="{{ dependency.url }}">{{ dependency.name }} {% if dependency.version %}({{ dependency.version }}){% endif %}</a>
+				<a class="list-group-item" href="{{ dependency.url }}">pip: {{ dependency.pip_package_name }} {% if dependency.version %}({{ dependency.version }}){% endif %}{% if dependency.package_name %} apt: {{dependency.package_name}}{% endif %}</a>
 			{% endfor %}
 			</div>
 		{% endif%}

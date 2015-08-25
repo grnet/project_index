@@ -178,7 +178,6 @@ class Dependency(models.Model):
     class Meta:
         ordering = ['name']
 
-
 class Cronjob(models.Model):
     name = models.CharField(max_length=255)
     project = models.ForeignKey(Project, null=True, blank=True)
@@ -223,3 +222,10 @@ def get_dependencies(sender, instance, created, *args, **kwargs):
         instance.get_dependencies()
         if not instance.description:
             instance.get_readme()
+    if sender == Dependency:
+        if not instance.package_name:
+            pack_name = instance.pip_package_name.lower()
+            if not pack_name.startswith('python-'):
+                pack_name = 'python-' + pack_name
+            instance.package_name = pack_name
+            instance.save()
