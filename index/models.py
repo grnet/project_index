@@ -48,6 +48,9 @@ class Project(models.Model):
     def get_absolute_url(self):
         return reverse('detail', kwargs={'project_slug': self.slug})
 
+    def get_wiki_url(self):
+        return reverse('wiki:detail', kwargs={'project_slug': self.slug})
+
     def __unicode__(self):
         return self.name
 

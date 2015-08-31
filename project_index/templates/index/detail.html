@@ -5,6 +5,7 @@
 {% block content %}
 <h1>{% if request.user.is_superuser %}<a href="{% url 'admin:index_project_change' project.id %}"><i class="fa fa-pencil"></i>
 </a>{% endif %}{{ project.name|title }}</h1>
+{% if request.user.is_superuser %}<a href="{{ project.get_wiki_url  }}" class="btn btn-default" role="button">Get MoinMoin to Clipboard  <i class="fa fa-wikipedia-w"></i></a>{% endif %}
 <h2>Description</h2>
 	{% autoescape off %}
 		{% markdown %}{{ project.description }}{% endmarkdown %}

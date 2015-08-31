@@ -20,6 +20,7 @@ from index.urls import project_urls as index_urls
 from index.urls import tags_urls
 from index.urls import hosts_urls
 from index.urls import cronjob_urls
+from index.urls import wiki_urls
 # from index.urls import database_urls # comment out if you want to display Databases Lists. Not implemented yet.
 
 admin.autodiscover()
@@ -31,5 +32,6 @@ urlpatterns = patterns(
     url(r'^tags/', include(tags_urls, namespace='tags')),
     url(r'^hosts/', include(hosts_urls, namespace='hosts')),
     url(r'^cronjobs/', include(cronjob_urls, namespace='cronjobs')),
+    url(r'^wiki/', include(wiki_urls, namespace='wiki'))
     # url(r'^databases/', include(database_urls, namespace='databases')), # comment out if you want to display Databases Lists. Not implemented yet.
 )
