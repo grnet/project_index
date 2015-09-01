@@ -39,7 +39,7 @@ header a.logo:after {
 .body {
 	background: white;
 	position: relative;
-	z-index: 10;
+	/*z-index: 10;*/
 	margin-bottom: 50px;
 	box-shadow: 0 0 10px 10px silver;
 	padding-bottom: 50px;
@@ -56,6 +56,12 @@ footer {
 	bottom: 0px;
 	left: 0;
 	right: 0;
-	z-index: 0;
+	z-index: -1;
 }
 
+#txt2
+{
+    display: none;
+    width: 100%;
+    resize: none;
+}

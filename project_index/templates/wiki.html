@@ -1,4 +1,17 @@
-<pre>
+{% extends "base.html"  %}
+{% load staticfiles %}
+{% block page_title  %} HTTP Error 503 - Service unavailable{% endblock  %}
+
+{% block menu  %}
+{% endblock %}
+
+{% block content  %}
+<p>
+  <a href="{% url 'wiki:wikilogin' project.slug %}" class="btn btn-primary" role="button">Add entry to Wiki</a>
+  <a href="{{ project.get_absolute_url }}" class="btn btn-default" role="button">Go Back to Project Details</a>
+</p>
+<div id="text">
+<pre id="txt1">
 = {{ project.name|title }} =
 
 == Description ==
@@ -46,3 +59,10 @@
 . [[Category-Ανάπτυξη]] [[Category-Τεκμηρίωση]]
 
 </pre>
+<textarea id="txt2" readonly="readonly" rows="30"></textarea>
+</div>
+{% endblock %}
+
+{% block extrajs %}
+<script src="{% static "js/select_text.js" %}"></script>
+{% endblock %}
