@@ -48,7 +48,7 @@ class CronjobTroughInline(admin.TabularInline):
 class ProjectAdmin(admin.ModelAdmin):
     search_fields = ['name']
     prepopulated_fields = {'slug': ('name',)}
-    list_display = ('name', 'hosts')
+    list_display = ('name', 'hosts', 'databases')
     list_filter = ('tag', 'instance__host')
     inlines = [
         RepositoryInline,
@@ -103,9 +103,12 @@ class DatabaseAdmin(admin.ModelAdmin):
     get_project.short_description = 'Project'
     get_project.admin_order_field = 'instance__project__name'
 
+class InstanceAdmin(admin.ModelAdmin):
+    list_display = ('project', 'instance_type', 'description', 'databases')
+
 admin.site.register(Database, DatabaseAdmin)
 admin.site.register(Project, ProjectAdmin)
-admin.site.register(Instance)
+admin.site.register(Instance, InstanceAdmin)
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Host, HostAdmin)
 admin.site.register(Cronjob, CronjobAdmin)

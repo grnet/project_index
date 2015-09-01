@@ -45,6 +45,15 @@ class Project(models.Model):
                 result.append(name)
         return ', '.join(result)
 
+    @property
+    def databases(self):
+        result = []
+        for instance in self.instance_set.all():
+            dbs = instance.databases
+            if dbs:
+                result.append(dbs)
+        return ', '.join(result)
+
     def get_absolute_url(self):
         return reverse('detail', kwargs={'project_slug': self.slug})
 
@@ -126,6 +135,18 @@ class Instance(models.Model):
     project = models.ForeignKey(Project)
     host = models.ForeignKey(Host, null=True, blank=True)
     virtualenv = models.ForeignKey(Virtualenv, null=True, blank=True)
+
+    @property
+    def databases(self):
+        result = []
+        for db in self.database_set.all():
+            try:
+                name = db.name
+            except:
+                continue
+            else:
+                result.append(name)
+        return ', '.join(result)
 
     def __unicode__(self):
         return '%s, %s, %s' % (
