@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	<h1>{% if request.user.is_superuser %}<a href="{% url 'admin:index_database_change' database.id %}"><i class="fa fa-pencil"></i>
+</a>{% endif %}{{ database.name }}</h1>
+{% if request.user.is_superuser %}<a href="{{ database.get_wiki_url  }}" class="btn btn-default" role="button">Get MoinMoin  <i class="fa fa-wikipedia-w"></i></a>{% endif %}
+	{% if database.instance %}
+	<h2>Project</h2>
+	<div class="list-group">
+	<a class="list-group-item" href="{{ database.instance.project.get_absolute_url }}">
+		{{ database.instance.project.name }}
+	</a>
+	</div>
+	{% endif%}
+
+{% endblock %}
+

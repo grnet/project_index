@@ -3,6 +3,7 @@
 {% block content %}
 	<h1>{% if request.user.is_superuser %}<a href="{% url 'admin:index_host_change' host.id %}"><i class="fa fa-pencil"></i>
 </a>{% endif %}{{ host.name }}</h1>
+	{% if request.user.is_superuser %}<a href="{{ host.get_wiki_url  }}" class="btn btn-default" role="button">Get MoinMoin  <i class="fa fa-wikipedia-w"></i></a>{% endif %}
 	{% with host.instance_set.all as instances %}
 		{% if instances %}
 		<h2>Projects ({{ instances|length }})</h2>

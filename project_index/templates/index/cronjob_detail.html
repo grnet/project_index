@@ -3,16 +3,23 @@
 {% block content %}
 <h1>{% if request.user.is_superuser %}<a href="{% url 'admin:index_cronjob_change' cronjob.id %}"><i class="fa fa-pencil"></i>
 </a>{% endif %} {{ cronjob.name }}</h1>
+{% if request.user.is_superuser %}<a href="{{ cronjob.get_wiki_url  }}" class="btn btn-default" role="button">Get MoinMoin  <i class="fa fa-wikipedia-w"></i></a>{% endif %}
 	{% if cronjob.project %}
-		For <a href="{{ cronjob.project.get_absolute_url }}">{{ cronjob.project|title }}</a> project.
-	{% endif %}
+	<h2>Project</h2>
+	<div class="list-group">
+	<a class="list-group-item" href="{{ cronjob.project.get_absolute_url }}">
+		{{ cronjob.project.name }}
+	</a>
+	</div>
+	{% endif%}
 	{% if cronjob.description %}
+	<h2>Description</h2>
 	<p>
 		{{ cronjob.description }}
 	</p>
 	{% endif %}
 	<h2>Command</h2>
-	{{ cronjob.cron_command }}
+	<pre>{{ cronjob.cron_command }}</pre>
 	<h2>Hosts</h2>
 	{% for host in cronjob.hosts.all %}
 		<a class="list-group-item" href="{{ host.get_absolute_url }}">{{ host.name }}</a>

@@ -8,7 +8,7 @@
 		<a class="list-group-item" href="{% url 'admin:index_database_add' %}"><i class="fa fa-plus"></i></a>
 	{% endif %}
 	{% for database in databases %}
-		<span class="list-group-item">{{ database.name }}</span>
+		<a class="list-group-item" href="{{ database.get_absolute_url }}">{{ database.name }}</a>
 	{% endfor %}
 </div>
 {% endblock %}

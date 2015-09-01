@@ -58,7 +58,7 @@ class Project(models.Model):
         return reverse('detail', kwargs={'project_slug': self.slug})
 
     def get_wiki_url(self):
-        return reverse('wiki:detail', kwargs={'project_slug': self.slug})
+        return reverse('wiki:project_detail', kwargs={'project_slug': self.slug})
 
     def __unicode__(self):
         return self.name
@@ -79,7 +79,7 @@ class Repository(models.Model):
 
 class Host(models.Model):
     name = models.CharField(max_length=255)
-
+    
     @property
     def cronjob_list(self):
         result = []
@@ -96,6 +96,9 @@ class Host(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    def get_wiki_url(self):
+        return reverse('wiki:host_detail', kwargs={'host_id': self.id})
 
     def get_absolute_url(self):
         return reverse('hosts:detail', kwargs={'id': self.id})
@@ -214,6 +217,9 @@ class Cronjob(models.Model):
     def get_absolute_url(self):
         return reverse('cronjobs:detail', kwargs={'id': self.id})
 
+    def get_wiki_url(self):
+        return reverse('wiki:cronjob_detail', kwargs={'cronjob_id': self.id})
+
     def __unicode__(self):
         return self.name
 
@@ -236,6 +242,12 @@ class Database(models.Model):
     port = models.IntegerField(max_length=255, blank=True)
     app_name = models.CharField(max_length=255, blank=True)
     instance = models.ForeignKey(Instance)
+
+    def get_absolute_url(self):
+        return reverse('databases:detail', kwargs={'id': self.id})
+
+    def get_wiki_url(self):
+        return reverse('wiki:database_detail', kwargs={'database_id': self.id})
 
     def __unicode__(self):
         return self.name
