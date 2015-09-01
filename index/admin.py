@@ -94,7 +94,14 @@ class AdminDatabaseForm(forms.ModelForm):
 
 class DatabaseAdmin(admin.ModelAdmin):
     form = AdminDatabaseForm
+    search_fields = ['name']
+    list_display = ('name', 'user', 'passwd', 'host', 'port', 'get_project', 'app_name')
+    list_filter = ('instance__project__name', )
 
+    def get_project(self, obj):
+        return obj.instance.project.name+'('+obj.instance.instance_type+')'
+    get_project.short_description = 'Project'
+    get_project.admin_order_field = 'instance__project__name'
 
 admin.site.register(Database, DatabaseAdmin)
 admin.site.register(Project, ProjectAdmin)

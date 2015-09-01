@@ -9,7 +9,7 @@ from index.tasks import get_requirements, get_readme
 join = os.path.join
 
 class Project(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField("Project", max_length=255)
     slug = models.SlugField(max_length=255)
     related_project = models.ForeignKey('self', null=True, blank=True)
 
@@ -210,7 +210,7 @@ class Cronjob(models.Model):
 class Database(models.Model):
     name = models.CharField(max_length=255)
     user = models.CharField(max_length=255, blank=True)
-    passwd = models.CharField(max_length=255, blank=True)
+    passwd = models.CharField("Password", max_length=255, blank=True)
     host = models.CharField(max_length=255, blank=True)
     port = models.IntegerField(max_length=255, blank=True)
     app_name = models.CharField(max_length=255, blank=True)
