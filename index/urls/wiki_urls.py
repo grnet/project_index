@@ -7,5 +7,5 @@ urlpatterns = patterns(
     url(r'^cronjob/detail/(?P<cronjob_id>[\w-]+)/$', wiki_views.cronjob_detail, name='cronjob_detail'),
     url(r'^database/detail/(?P<database_id>[\w-]+)/$', wiki_views.database_detail, name='database_detail'),
     url(r'^host/detail/(?P<host_id>[\w-]+)/$', wiki_views.host_detail, name='host_detail'),
-    url(r'^wikilogin/(?P<project_id>[\w-]+)$', wiki_views.wikilogin, name='wikilogin'),
+    url(r'^wikilogin/(?P<project_slug>[\w-]+)$', wiki_views.wikilogin, name='wikilogin'),
 )

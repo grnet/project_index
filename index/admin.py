@@ -81,6 +81,7 @@ class CronjobAdmin(admin.ModelAdmin):
 
 class VirtualenvAdmin(admin.ModelAdmin):
     search_fields = ['name']
+    list_display = ('name', 'path')
 
 
 class DependencyAdmin(admin.ModelAdmin):

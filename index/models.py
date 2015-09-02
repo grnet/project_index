@@ -118,6 +118,7 @@ class Host(models.Model):
 
 class Virtualenv(models.Model):
     name = models.CharField(max_length=255)
+    path = models.CharField(max_length=255, default='Please enter a valid virtualenv path')
 
     def __unicode__(self):
         return self.name
