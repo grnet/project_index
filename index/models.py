@@ -244,6 +244,7 @@ class Database(models.Model):
     passwd = models.CharField("Password", max_length=255, blank=True)
     host = models.CharField(max_length=255, blank=True)
     port = models.IntegerField(max_length=255, blank=True)
+    engine = models.CharField(max_length=255, default='mysql')
     app_name = models.CharField(max_length=255, blank=True)
     instance = models.ForeignKey(Instance)
 

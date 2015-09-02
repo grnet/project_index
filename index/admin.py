@@ -102,6 +102,7 @@ class DatabaseAdmin(admin.ModelAdmin):
         'passwd',
         'host',
         'port',
+        'engine',
         'get_project',
         'app_name'
     )
