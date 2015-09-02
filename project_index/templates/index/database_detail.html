@@ -12,6 +12,17 @@
 	</a>
 	</div>
 	{% endif%}
+	{% if database.app_name %}
+	<h3>Application Name</h3>
+	<div class="list-group">
+	<li class="list-group-item">
+		{{ database.app_name }}
+	</li>
+	{% endif %}
+
+	<h2>Database Details</h2>
+	<pre>{% if database.user %}<strong>User:</strong> {{ database.user }} <br/>{% endif %}{% if database.passwd %}<strong>Password:</strong> {{ database.passwd }} <br/>{% endif %}{% if database.host %}<strong>Host:</strong> {{ database.host }} <br/>{% endif %}{% if database.port %}<strong>Port:</strong> {{ database.port }} <br/>{% endif %}</pre>
+
 
 {% endblock %}
 
