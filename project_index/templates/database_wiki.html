@@ -12,7 +12,23 @@
 </p>
 <div id="text">
 <pre id="txt1">
-= I am a super dupper Template =
+= {{ database.name }} =
+
+{% if database.instance %}== Project ==
+{{ database.instance.project.name }}{% endif%}
+
+{% if database.app_name %}=== Application Name ===
+{{ database.app_name }}{% endif %}
+
+== Database Details ==
+{% if database.user %}||User: {{ database.user }}||{% endif %}
+{% if database.passwd %}||Password: {{ database.passwd }} ||{% endif %}
+{% if database.host %}||Host: {{ database.host }} ||{% endif %}
+{% if database.port %}||Port: {{ database.port }} ||{% endif %}
+
+----
+ [[Category-Ανάπτυξη]] [[Category-Τεκμηρίωση]]
+
 </pre>
 <textarea id="txt2" readonly="readonly" rows="30"></textarea>
 </div>
