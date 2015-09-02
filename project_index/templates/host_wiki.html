@@ -2,17 +2,27 @@
 {% load staticfiles %}
 {% block page_title  %} Host's MoinMoin{% endblock  %}
 
-{% block menu  %}
-{% endblock %}
-
 {% block content  %}
 <p>
   <a href="#" class="btn btn-primary" role="button">Add entry to Wiki</a>
-  <a href="{{ host.get_absolute_url }}" class="btn btn-default" role="button">Go Back to Project Details</a>
+  <a href="{{ host.get_absolute_url }}" class="btn btn-default" role="button">Go Back to Host Details</a>
 </p>
 <div id="text">
 <pre id="txt1">
-= I am a super dupper Template =
+= {{ host.name }} =
+
+{% with host.instance_set.all as instances %}{% if instances %}== Projects ({{ instances|length }}) ==
+{% for instance in instances %}||{{ instance.project.name }}: {{ instance.get_instance_type_display }}||
+{% endfor %}{% endif%}{% endwith %}
+{% with host.packages as packages %}{% if packages %}== Python Packages ({{ packages|length }}) ==
+{% for package in packages %}||{{ package.name }} {% if package.version %}({{ package.version }}){% endif %}||
+{% endfor %}{% endif %}{% endwith %}
+{% with host.cronjob_set.all as cronjobs %}{% if cronjobs %}== Cronjobs ({{ cronjobs|length }}) ==
+{% for cronjob in cronjobs %}||{{ cronjob.name }}||
+{% endfor %}{% endif %}{% endwith %}
+----
+ [[Category-Ανάπτυξη]] [[Category-Τεκμηρίωση]]
+
 </pre>
 <textarea id="txt2" readonly="readonly" rows="30"></textarea>
 </div>

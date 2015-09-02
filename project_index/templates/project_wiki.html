@@ -2,9 +2,6 @@
 {% load staticfiles %}
 {% block page_title  %} Project's MoinMoin{% endblock  %}
 
-{% block menu  %}
-{% endblock %}
-
 {% block content  %}
 <p>
   <a href="{% url 'wiki:wikilogin' project.slug %}" class="btn btn-primary" role="button">Add entry to Wiki</a>

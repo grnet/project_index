@@ -2,13 +2,10 @@
 {% load staticfiles %}
 {% block page_title  %} Database's MoinMoin{% endblock  %}
 
-{% block menu  %}
-{% endblock %}
-
 {% block content  %}
 <p>
   <a href="#" class="btn btn-primary" role="button">Add entry to Wiki</a>
-  <a href="{{ database.get_absolute_url }}" class="btn btn-default" role="button">Go Back to Project Details</a>
+  <a href="{{ database.get_absolute_url }}" class="btn btn-default" role="button">Go Back to Database Details</a>
 </p>
 <div id="text">
 <pre id="txt1">
