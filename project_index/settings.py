@@ -116,6 +116,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
     'django.contrib.messages.context_processors.messages',
     'project_index.context_processors.branding',
+    'project_index.context_processors.wiki',
     'project_index.context_processors.menu',
 )
 

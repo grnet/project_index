@@ -4,7 +4,7 @@
 
 {% block content  %}
 <p>
-  <a href="https://wiki.noc.grnet.gr/{{ host.name }}?action=edit" class="btn btn-primary" role="button">Add entry to Wiki</a>
+  <a href="{{ wiki_urls.url }}{{ wiki_urls.parent_dir }}{{ wiki_urls.hosts_dir }}{{ host.name }}?action=edit" class="btn btn-primary" role="button">Add entry to Wiki</a>
   <a href="{{ host.get_absolute_url }}" class="btn btn-default" role="button">Go Back to Host Details</a>
 </p>
 <div id="text">

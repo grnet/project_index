@@ -8,6 +8,12 @@ def branding(request):
     }
 
 
+def wiki(request):
+    return {
+        'wiki_urls': settings.WIKI,
+    }
+
+
 def menu(request):
     path = request.path
     menu = [
