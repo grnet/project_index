@@ -8,6 +8,7 @@ from index.tasks import get_requirements, get_readme
 
 join = os.path.join
 
+
 class Project(models.Model):
     name = models.CharField("Project", max_length=255)
     slug = models.SlugField(max_length=255)
@@ -79,7 +80,7 @@ class Repository(models.Model):
 
 class Host(models.Model):
     name = models.CharField(max_length=255)
-    
+
     @property
     def cronjob_list(self):
         result = []
@@ -206,6 +207,7 @@ class Dependency(models.Model):
     class Meta:
         ordering = ['name']
 
+
 class Cronjob(models.Model):
     name = models.CharField(max_length=255)
     project = models.ForeignKey(Project, null=True, blank=True)
@@ -235,6 +237,7 @@ class Cronjob(models.Model):
             result.append(host.name)
         return ', '.join(result)
 
+
 class Database(models.Model):
     name = models.CharField(max_length=255)
     user = models.CharField(max_length=255, blank=True)
@@ -252,6 +255,7 @@ class Database(models.Model):
 
     def __unicode__(self):
         return self.name
+
 
 @receiver(post_save)
 def get_dependencies(sender, instance, created, *args, **kwargs):

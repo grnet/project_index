@@ -88,21 +88,30 @@ class DependencyAdmin(admin.ModelAdmin):
     search_fields = ['name']
     list_display = ('name', 'version', 'dependent_project_count')
 
-from django.forms import ModelForm, PasswordInput
 
 class AdminDatabaseForm(forms.ModelForm):
-    passwd = forms.CharField(widget=PasswordInput(), required=False)
+    passwd = forms.CharField(widget=forms.PasswordInput(), required=False)
+
 
 class DatabaseAdmin(admin.ModelAdmin):
     form = AdminDatabaseForm
     search_fields = ['name']
-    list_display = ('name', 'user', 'passwd', 'host', 'port', 'get_project', 'app_name')
+    list_display = (
+        'name',
+        'user',
+        'passwd',
+        'host',
+        'port',
+        'get_project',
+        'app_name'
+    )
     list_filter = ('instance__project__name', )
 
     def get_project(self, obj):
         return obj.instance.project.name+'('+obj.instance.instance_type+')'
     get_project.short_description = 'Project'
     get_project.admin_order_field = 'instance__project__name'
+
 
 class InstanceAdmin(admin.ModelAdmin):
     list_display = ('project', 'instance_type', 'description', 'databases')
