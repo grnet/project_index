@@ -1,15 +1,10 @@
 from django.shortcuts import render, get_object_or_404
-from django.shortcuts import redirect
 from index.models import Project, Cronjob, Database, Host
 
 
 def project_detail(request, project_slug):
     return render(request, 'project_wiki.html',
                   {'project': get_object_or_404(Project, slug=project_slug)})
-
-
-def wikilogin(request, project_slug):
-    return redirect('https://wiki.noc.grnet.gr/'+project_slug+'?action=edit')
 
 
 def cronjob_detail(request, cronjob_id):

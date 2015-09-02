@@ -23,9 +23,4 @@ urlpatterns = patterns(
         wiki_views.host_detail,
         name='host_detail'
     ),
-    url(
-        r'^wikilogin/(?P<project_slug>[\w-]+)$',
-        wiki_views.wikilogin,
-        name='wikilogin'
-    ),
 )
