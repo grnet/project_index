@@ -2,7 +2,6 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from index.models import Project, Cronjob, Database, Host
-from index.forms import WikiLoginForm
 
 
 def project_detail(request, project_slug):
