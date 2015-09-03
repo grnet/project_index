@@ -18,10 +18,7 @@
 {{ database.app_name }}{% endif %}
 
 == Database Details ==
-{% if database.user %}||User: {{ database.user }}||{% endif %}
-{% if database.passwd %}||Password: {{ database.passwd }} ||{% endif %}
 {% if database.host %}||Host: {{ database.host }} ||{% endif %}
-{% if database.port %}||Port: {{ database.port }} ||{% endif %}
 ||Engine: {{ database.engine }} ||
 
 ----

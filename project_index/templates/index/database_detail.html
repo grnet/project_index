@@ -27,7 +27,7 @@
 	{% endif %}
 
 	<h2>Database Details</h2>
-	<pre>{% if database.user %}<strong>User:</strong> {{ database.user }} <br/>{% endif %}{% if database.passwd %}<strong>Password:</strong> {{ database.passwd }} <br/>{% endif %}{% if database.host %}<strong>Host:</strong> {{ database.host }} <br/>{% endif %}{% if database.port %}<strong>Port:</strong> {{ database.port }} <br/>{% endif %}<strong>Engine:</strong> {{ database.engine }}</pre>
+	<pre>{% if database.host %}<strong>Host:</strong> {{ database.host }} <br/>{% endif %}<strong>Engine:</strong> {{ database.engine }}</pre>
 
 
 {% endblock %}
