@@ -12,7 +12,7 @@
 = {{ database.name }} =
 
 {% with database.instances.all as instances %}{% if instances %}== Instances ({{ instances|length }}) ==
-{% for instance in instances %}{{ instance.project.name }} ({{instance.get_instance_type_display}})
+{% for instance in instances %}||[[{{ wiki_urls.url }}{{ wiki_urls.parent_dir }}{{ wiki_urls.projects_dir }}{{ instance.project.name }}|{{ instance.project.name }} ({{instance.get_instance_type_display}})]]||
 {% endfor %}{% endif%}{% endwith %}
 {% if database.app_name %}=== Application Name ===
 {{ database.app_name }}{% endif %}

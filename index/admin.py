@@ -45,6 +45,11 @@ class CronjobTroughInline(admin.TabularInline):
     model = Cronjob.hosts.through
 
 
+class DatabaseTroughInline(admin.TabularInline):
+    extra = 0
+    model = Database.instances.through
+
+
 class ProjectAdmin(admin.ModelAdmin):
     search_fields = ['name']
     prepopulated_fields = {'slug': ('name',)}
@@ -116,6 +121,9 @@ class DatabaseAdmin(admin.ModelAdmin):
 
 class InstanceAdmin(admin.ModelAdmin):
     list_display = ('project', 'instance_type', 'description', 'databases')
+    inlines = [
+        DatabaseTroughInline,
+    ]
 
 admin.site.register(Database, DatabaseAdmin)
 admin.site.register(Project, ProjectAdmin)

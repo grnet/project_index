@@ -12,13 +12,13 @@
 = {{ host.name }} =
 
 {% with host.instance_set.all as instances %}{% if instances %}== Projects ({{ instances|length }}) ==
-{% for instance in instances %}||{{ instance.project.name }}: {{ instance.get_instance_type_display }}||
+{% for instance in instances %}||[[{{ wiki_urls.url }}{{ wiki_urls.parent_dir }}{{ wiki_urls.projects_dir }}{{ instance.project.name }}|{{ instance.project.name }}: {{ instance.get_instance_type_display }}]]||
 {% endfor %}{% endif%}{% endwith %}
 {% with host.packages as packages %}{% if packages %}== Python Packages ({{ packages|length }}) ==
-{% for package in packages %}||{{ package.name }} {% if package.version %}({{ package.version }}){% endif %}||
+{% for package in packages %}||[[{{ package.url }}|{{ package.name }} {% if package.version %}({{ package.version }}){% endif %}]]||
 {% endfor %}{% endif %}{% endwith %}
 {% with host.cronjob_set.all as cronjobs %}{% if cronjobs %}== Cronjobs ({{ cronjobs|length }}) ==
-{% for cronjob in cronjobs %}||{{ cronjob.name }}||
+{% for cronjob in cronjobs %}||[[{{ wiki_urls.url }}{{ wiki_urls.parent_dir }}{{ wiki_urls.cronjobs_dir }}{{ cronjob.name }}|{{ cronjob.name }}]]||
 {% endfor %}{% endif %}{% endwith %}
 ----
  [[Category-Ανάπτυξη]] [[Category-Τεκμηρίωση]]

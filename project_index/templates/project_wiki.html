@@ -24,7 +24,7 @@
 ||path: {{ instance.path }}||
 {% if instance.host %}||host: {{ instance.host }}||{% endif %}
 {% if instance.virtualenv %}||Virtualenv: {{ instance.virtualenv.name }}||{% endif %}
-{% with instance.instance_info.all as dbs %}{% if dbs%}{% for db in dbs %}||db: {{ db.name }} ||host: {{ db.host }} ||user: {{ db.user }} ||port: {{ db.port }}||
+{% with instance.instance_info.all as dbs %}{% if dbs%}{% for db in dbs %}||db: [[{{ wiki_urls.url }}{{ wiki_urls.parent_dir }}{{ wiki_urls.databases_dir }}{{ db.name }}|{{ db.name }}]] ||host: {{ db.host }} ||user: {{ db.user }} ||port: {{ db.port }}||engine: {{ db.engine }}||
 {% endfor %}{% endif %}{% endwith %}{% endfor %}{% endif %}{% endwith %}
 
 {% with project.repository_set.all as repos %}{% if repos %}== Repositories ({{ repos|length }}) ==
@@ -39,7 +39,7 @@
 
 {% with project.cronjob_set.all as cronjobs %}{% if cronjobs %}== Cronjobs ({{ cronjobs|length }}) ==
 
-{% for cronjob in cronjobs %}||{{ cronjob.name }}||{{ cronjob.description }}||
+{% for cronjob in cronjobs %}||[[{{ wiki_urls.url }}{{ wiki_urls.parent_dir }}{{ wiki_urls.cronjobs_dir }}{{ cronjob.name }}|{{ cronjob.name }}]]||{% if cronjob.description%}{{ cronjob.description }}||{% endif %}
 {% endfor %}{% endif%}{% endwith %}
 
 {% with project.tag.all as tags %}{% if tags %}== Tags ({{ tags|length }}) ==
