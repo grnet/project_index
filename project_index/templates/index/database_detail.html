@@ -4,14 +4,20 @@
 	<h1>{% if request.user.is_superuser %}<a href="{% url 'admin:index_database_change' database.id %}"><i class="fa fa-pencil"></i>
 </a>{% endif %}{{ database.name }}</h1>
 {% if request.user.is_superuser %}<a href="{{ database.get_wiki_url  }}" class="btn btn-default" role="button">Get MoinMoin  <i class="fa fa-wikipedia-w"></i></a>{% endif %}
-	{% if database.instance %}
-	<h2>Project</h2>
-	<div class="list-group">
-	<a class="list-group-item" href="{{ database.instance.project.get_absolute_url }}">
-		{{ database.instance.project.name }}
-	</a>
-	</div>
-	{% endif%}
+
+	{% with database.instances.all as instances %}
+		{% if instances %}
+			<h2>Instances ({{ instances|length }})</h2>
+			<div class="list-group">
+			{% for instance in instances %}
+				<a class="list-group-item" href="{{ instance.project.get_absolute_url }}">
+					{{ instance.project.name }} ({{instance.get_instance_type_display}})
+				</a>
+			{% endfor %}
+			</div>
+		{% endif%}
+	{% endwith %}
+
 	{% if database.app_name %}
 	<h3>Application Name</h3>
 	<div class="list-group">

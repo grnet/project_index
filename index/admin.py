@@ -106,12 +106,12 @@ class DatabaseAdmin(admin.ModelAdmin):
         'get_project',
         'app_name'
     )
-    list_filter = ('instance__project__name', )
+    list_filter = ('instances__project__name', )
 
     def get_project(self, obj):
-        return obj.instance.project.name+'('+obj.instance.instance_type+')'
+        return ', '.join(['%s (%s)' % (i.project.name, i.instance_type) for i in obj.instances.all()])
     get_project.short_description = 'Project'
-    get_project.admin_order_field = 'instance__project__name'
+    get_project.admin_order_field = 'instances__project__name'
 
 
 class InstanceAdmin(admin.ModelAdmin):

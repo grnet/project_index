@@ -144,7 +144,7 @@ class Instance(models.Model):
     @property
     def databases(self):
         result = []
-        for db in self.database_set.all():
+        for db in self.instance_info.all():
             try:
                 name = db.name
             except:
@@ -246,7 +246,7 @@ class Database(models.Model):
     port = models.CharField(max_length=255, default='default')
     engine = models.CharField(max_length=255, default='mysql')
     app_name = models.CharField(max_length=255, blank=True)
-    instance = models.ForeignKey(Instance)
+    instances = models.ManyToManyField(Instance, related_name='instance_info')
 
     def get_absolute_url(self):
         return reverse('databases:detail', kwargs={'id': self.id})

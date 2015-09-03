@@ -11,9 +11,9 @@
 <pre id="txt1">
 = {{ database.name }} =
 
-{% if database.instance %}== Project ==
-{{ database.instance.project.name }}{% endif%}
-
+{% with database.instances.all as instances %}{% if instances %}== Instances ({{ instances|length }}) ==
+{% for instance in instances %}{{ instance.project.name }} ({{instance.get_instance_type_display}})
+{% endfor %}{% endif%}{% endwith %}
 {% if database.app_name %}=== Application Name ===
 {{ database.app_name }}{% endif %}
 

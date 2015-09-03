@@ -24,7 +24,7 @@
 ||path: {{ instance.path }}||
 {% if instance.host %}||host: {{ instance.host }}||{% endif %}
 {% if instance.virtualenv %}||Virtualenv: {{ instance.virtualenv.name }}||{% endif %}
-{% with instance.database_set.all as dbs %}{% if dbs%}{% for db in dbs %}||db: {{ db.name }} ||host: {{ db.host }} ||user: {{ db.user }} ||port: {{ db.port }}||
+{% with instance.instance_info.all as dbs %}{% if dbs%}{% for db in dbs %}||db: {{ db.name }} ||host: {{ db.host }} ||user: {{ db.user }} ||port: {{ db.port }}||
 {% endfor %}{% endif %}{% endwith %}{% endfor %}{% endif %}{% endwith %}
 
 {% with project.repository_set.all as repos %}{% if repos %}== Repositories ({{ repos|length }}) ==
