@@ -12,7 +12,7 @@
 = {{ cronjob.name }} =
 
 {% if cronjob.project %}== Project ==
-||[[{{ wiki_urls.url }}{{ wiki_urls.parent_dir }}{{ wiki_urls.projects_dir }}{{ cronjob.project.name }}|{{ cronjob.project.name }}]]||{% endif%}
+||[[{{ wiki_urls.url }}{{ wiki_urls.parent_dir }}{{ wiki_urls.projects_dir }}{{ cronjob.project.name }}|{{ cronjob.project.slug }}]]||{% endif%}
 
 {% if cronjob.description %}== Description ==
 {{ cronjob.description }}{% endif %}
