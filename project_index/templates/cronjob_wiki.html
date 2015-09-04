@@ -4,7 +4,7 @@
 
 {% block content  %}
 <p>
-  <a href="{{ wiki_urls.url }}{{ wiki_urls.parent_dir }}{{ wiki_urls.cronjobs_dir }}{{ cronjob.name }}?action=edit" class="btn btn-primary" role="button">Add entry to Wiki</a>
+  <a href="{{ wiki_urls.url }}{{ wiki_urls.parent_dir }}{{ wiki_urls.cronjobs_dir }}{{ cronjob.name }}?action=edit" class="btn btn-primary" role="button" target="_blank">Add entry to Wiki</a>
   <a href="{{ cronjob.get_absolute_url }}" class="btn btn-default" role="button">Go Back to Cronjob Details</a>
 </p>
 <div id="text">
