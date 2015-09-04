@@ -48,6 +48,19 @@ BRANDING = {
     'website': 'https://noc.grnet.gr'
 }
 
+WIKI = {
+    'url': 'http://wiki.noc.grnet.gr',
+    'parent_dir': '/Ανάπτυξη/Τεκμηρίωση',
+    'databases_dir': '/Βάσεις Δεδομένων/',
+    'hosts_dir': '/Hosts/',
+    'cronjobs_dir': '/Cronjobs/',
+    'projects_dir': '/Projects/',
+    'project_category': 'Projects',
+    'host_category': 'Hosts',
+    'cronjob_category': 'Cronjobs',
+    'database_category': 'Βάσεις Δεδομένων'
+}
+
 # handle media and static files serving
 MEDIA_URL = '/media/'
 STATIC_URL = '/static/'
