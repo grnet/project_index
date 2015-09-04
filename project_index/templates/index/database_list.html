@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load staticfiles %}
 
 {% block content %}
 <h1> {{ databases|length }} Databases</h1>
@@ -8,7 +8,11 @@
 		<a class="list-group-item" href="{% url 'admin:index_database_add' %}"><i class="fa fa-plus"></i></a>
 	{% endif %}
 	{% for database in databases %}
-		<a class="list-group-item" href="{{ database.get_absolute_url }}">{{ database.name }}</a>
+		<a class="list-group-item searchable" href="{{ database.get_absolute_url }}" data-index="{{ database.name|lower }}">{{ database.name }}</a>
 	{% endfor %}
 </div>
+{% endblock %}
+
+{% block extrajs %}
+<script src="{% static "js/css_search.js" %}"></script>
 {% endblock %}

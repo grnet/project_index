@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
 
 {% block content %}
 <h1>{{ tags|length }} Tags</h1>
@@ -8,7 +9,11 @@
 		<a class="list-group-item" href="{% url 'admin:index_tag_add' %}"><i class="fa fa-plus"></i></a>
 	{% endif %}
 	{% for tag in tags %}
-		<a class="list-group-item" href="{{ tag.get_absolute_url }}">{{ tag.name }}</a>
+		<a class="list-group-item searchable" href="{{ tag.get_absolute_url }}" data-index="{{ tag.name|lower }}">{{ tag.name }}</a>
 	{% endfor %}
 </div>
+{% endblock %}
+
+{% block extrajs %}
+<script src="{% static "js/css_search.js" %}"></script>
 {% endblock %}

@@ -36,6 +36,16 @@
 							<li class="{{ item.active }}"><a href="{{ item.url }}">{{ item.name }}</a></li>
 							{% endfor %}
 						</ul>
+
+						<div class="col-sm-3 col-md-3 pull-right">
+					        <form class="navbar-form" role="search">
+						        <div class="form-group has-feedback">
+						            <input type="text" class="form-control" placeholder="Search" name="srch-term" id="search">
+						            <i class="glyphicon glyphicon-search form-control-feedback"></i>
+						            <style id="search_style"></style>
+						        </div>
+					        </form>
+				        </div>
 					</div><!--/.nav-collapse -->
 					{% endblock %}
 				</div>

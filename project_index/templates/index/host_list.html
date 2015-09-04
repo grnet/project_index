@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
 
 {% block content %}
 {% if hosts %}
@@ -9,8 +10,12 @@
 		<a class="list-group-item" href="{% url 'admin:index_host_add' %}"><i class="fa fa-plus"></i></a>
 	{% endif %}
 	{% for host in hosts %}
-		<a class="list-group-item" href="{{ host.get_absolute_url }}">{{ host.name }}</a>
+		<a class="list-group-item searchable" href="{{ host.get_absolute_url }}" data-index="{{ host.name|lower }}">{{ host.name }}</a>
 	{% endfor %}
 </div>
 {% endif %}
+{% endblock %}
+
+{% block extrajs %}
+<script src="{% static "js/css_search.js" %}"></script>
 {% endblock %}

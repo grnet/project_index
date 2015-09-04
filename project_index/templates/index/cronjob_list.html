@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
 
 {% block content %}
 {% if cronjobs %}
@@ -8,10 +9,14 @@
 			<a class="list-group-item" href="{% url 'admin:index_cronjob_add' %}"><i class="fa fa-plus"></i></a>
 		{% endif %}
 		{% for cronjob in cronjobs %}
-			<a class="list-group-item" href="{{ cronjob.get_absolute_url }}">{{ cronjob.name }} @ {{ cronjob.host_list }} {% if cronjob.project %} for {{cronjob.project}}{% endif %}.</a>
+			<a class="list-group-item searchable" href="{{ cronjob.get_absolute_url }}" data-index="{{ cronjob.name|lower }}">{{ cronjob.name }} @ {{ cronjob.host_list }} {% if cronjob.project %} for {{cronjob.project}}{% endif %}.</a>
 		{% endfor %}
 	</div>
 {% else %}
-	No cronjos register
+	No cronjobs register
 {% endif %}
+{% endblock %}
+
+{% block extrajs %}
+<script src="{% static "js/css_search.js" %}"></script>
 {% endblock %}

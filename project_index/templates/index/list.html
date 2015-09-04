@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load staticfiles %}
 
 {% block content %}
 <h1> {{ projects|length }} Projects</h1>
@@ -8,7 +8,11 @@
 		<a class="list-group-item" href="{% url 'admin:index_project_add' %}"><i class="fa fa-plus"></i></a>
 	{% endif %}
 	{% for project in projects %}
-		<a class="list-group-item" href="{{ project.get_absolute_url }}">{{ project.name|title }}</a>
+		<a class="list-group-item searchable" href="{{ project.get_absolute_url }}" data-index="{{ project.slug }}">{{ project.name|title }}</a>
 	{% endfor %}
 </div>
+{% endblock %}
+
+{% block extrajs %}
+<script src="{% static "js/css_search.js" %}"></script>
 {% endblock %}
