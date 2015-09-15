@@ -25,7 +25,7 @@ MANAGERS = ADMINS
 
 
 # reset the secret key. THIS IS AN EXAMPLE.
-SECRET_KEY = 'm4r29he&amp;!kwfj$8v##y=4hz7fl3a03645uu(99g!7*u4v3e&amp;)5'
+SECRET_KEY = <SECRET_KEY>
 
 # db connection info
 DATABASES = {
