@@ -39,7 +39,7 @@ def get_requirements(project):
     if repos:
         for repository in repos:
             if repository.url:
-                path = ('/tmp/%s/') % ''.join(random.choice(string.lowercase) for i in range(20))
+                path = ('/tmp/%s/') % ''.join([random.choice(string.lowercase) for i in range(20)])
                 try:
                     repo = Gittle.clone(repository.url, path, bare=True)
                 except:
@@ -47,7 +47,6 @@ def get_requirements(project):
                     # the post_save function.
                     from index.models import Project
                     Project.objects.filter(id=project.id).update(public=False)
-                    pass
                 else:
                     requirements = repo.file_versions('requirements.txt')
                     if requirements:

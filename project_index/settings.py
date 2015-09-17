@@ -125,6 +125,10 @@ AUTH_PROFILE_MODULE = 'accounts.UserProfile'
 BROKER_URL = 'django://'
 CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
 
+# test runner to avoid pre django 1.6 warnings
+# TEST_RUNNER = 'django.test.runner.DiscoverRunner'
+TEST_RUNNER = 'djcelery.contrib.test_runner.CeleryTestSuiteRunner'
+
 
 def _dictmerge(a, b):
     """ deep merge two dictionaries """
