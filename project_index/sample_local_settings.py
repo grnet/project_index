@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright (C) 2014 GRNET S.A.
 #
 # This program is free software: you can redistribute it and/or modify
@@ -50,15 +51,15 @@ BRANDING = {
 
 WIKI = {
     'url': 'http://wiki.noc.grnet.gr',
-    'parent_dir': '/Ανάπτυξη/Τεκμηρίωση',
-    'databases_dir': '/Βάσεις Δεδομένων/',
+    'parent_dir': u'/Ανάπτυξη/Τεκμηρίωση',
+    'databases_dir': u'/Βάσεις Δεδομένων/',
     'hosts_dir': '/Hosts/',
     'cronjobs_dir': '/Cronjobs/',
     'projects_dir': '/Projects/',
     'project_category': 'Projects',
     'host_category': 'Hosts',
     'cronjob_category': 'Cronjobs',
-    'database_category': 'Βάσεις Δεδομένων'
+    'database_category': u'Βάσεις Δεδομένων'
 }
 
 # handle media and static files serving
