@@ -34,6 +34,14 @@ class Project(models.Model):
     def get_readme(self):
         return get_readme.delay(self)
 
+    def search_tags(self):
+        ret = str()
+        ret += self.slug
+        tags = self.tag.values()
+        for key in tags.values():
+            ret += ' ' + key.get('name')
+        return ret
+
     @property
     def hosts(self):
         result = []
