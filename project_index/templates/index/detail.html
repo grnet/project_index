@@ -27,7 +27,7 @@
 			<h2>Instances ({{ instances|length }})</h2>
 			<div>
 			{% for instance in instances %}
-				<h3><a href="{{ instance.url }}">{{ instance.get_instance_type_display }}</a></h3>
+				<h3><a target="_blank" href="{{ instance.url }}">{{ instance.get_instance_type_display }}</a></h3>
 				<p>
 					{{ instance.description }}
 				</p>
