@@ -40,7 +40,7 @@
 						<div class="col-sm-3 col-md-3 pull-right">
 					        <form class="navbar-form" role="search">
 						        <div class="form-group has-feedback">
-						            <input type="text" class="form-control" placeholder="Search" name="srch-term" id="search">
+						            <input type="text" class="form-control" placeholder="Search" name="srch-term" id="search" autofocus>
 						            <i class="glyphicon glyphicon-search form-control-feedback"></i>
 						            <style id="search_style"></style>
 						        </div>
@@ -79,6 +79,14 @@
 	</footer>
 	<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js" ></script>
-	{% block extrajs %}{% endblock %}
+	{% block extrajs %}
+	<script type="text/javascript">
+
+	window.onload = function() {
+	  var input = document.getElementById("search").focus();
+	}
+
+	</script>
+	{% endblock %}
 </body>
 </html>
