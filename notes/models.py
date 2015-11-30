@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.urlresolvers import reverse
 
-from index.models import Tag, Project
+from index.models import Tag, Project, Database
 
 
 class Note(models.Model):
@@ -9,6 +9,7 @@ class Note(models.Model):
     description = models.TextField()
     tag = models.ManyToManyField(Tag)
     project = models.ForeignKey(Project)
+    database = models.ForeignKey(Database, null=True)
 
     def __unicode__(self):
         return self.title
