@@ -109,7 +109,7 @@ class DatabaseAdmin(admin.ModelAdmin):
     list_display = (
         'name',
         'user',
-        'passwd',
+        # 'passwd',
         'host',
         'port',
         'engine',
