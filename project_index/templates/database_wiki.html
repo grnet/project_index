@@ -21,9 +21,14 @@
 {% if database.host %}||Host: {{ database.host }} ||{% endif %}
 ||Engine: {{ database.engine }} ||
 
+{% if database.note_set.all %}
+== Notes =={% for note in database.note_set.all %}
+=== {{ note.title }} ===
+{{ note.description }}
+{% endfor %}
+{% endif%}
 ----
- [[Category-{{ wiki_urls.database_category }}]]
-
+[[Category-{{ wiki_urls.database_category }}]]
 </pre>
 <textarea id="txt2" readonly="readonly" rows="30"></textarea>
 </div>

@@ -8,7 +8,7 @@ class Note(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
     tag = models.ManyToManyField(Tag)
-    project = models.ForeignKey(Project)
+    project = models.ForeignKey(Project, null=True, blank=True)
     database = models.ForeignKey(Database, null=True, blank=True)
 
     def __unicode__(self):
