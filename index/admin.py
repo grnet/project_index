@@ -50,6 +50,11 @@ class DatabaseTroughInline(admin.TabularInline):
     model = Database.instances.through
 
 
+class NoteDatabaseInline(admin.TabularInline):
+    extra = 0
+    model = Note
+
+
 class ProjectAdmin(admin.ModelAdmin):
     search_fields = ['name']
     prepopulated_fields = {'slug': ('name',)}
@@ -112,6 +117,10 @@ class DatabaseAdmin(admin.ModelAdmin):
         'app_name'
     )
     list_filter = ('instances__project__name', )
+
+    inlines = [
+        NoteDatabaseInline,
+    ]
 
     def get_project(self, obj):
         return ', '.join(['%s (%s)' % (i.project.name, i.instance_type) for i in obj.instances.all()])

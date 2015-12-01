@@ -9,7 +9,7 @@ class Note(models.Model):
     description = models.TextField()
     tag = models.ManyToManyField(Tag)
     project = models.ForeignKey(Project)
-    database = models.ForeignKey(Database, null=True)
+    database = models.ForeignKey(Database, null=True, blank=True)
 
     def __unicode__(self):
         return self.title

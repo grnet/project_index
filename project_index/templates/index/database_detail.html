@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load markdown_deux_tags %}
 
 {% block content %}
 	<h1>{% if request.user.is_superuser %}<a href="{% url 'admin:index_database_change' database.id %}"><i class="fa fa-pencil"></i>
@@ -29,6 +30,19 @@
 	<h2>Database Details</h2>
 	<pre>{% if database.host %}<strong>Host:</strong> {{ database.host }} <br/>{% endif %}<strong>Engine:</strong> {{ database.engine }}</pre>
 
+	{% with database.note_set.all as notes %} 
+		{% if notes %}
+			<h2>Notes ({{ notes|length }})</h2>
+			{% for note in notes %}
+				<h1>{{ note.title }}</h1>
+				<p>
+					{% autoescape off %}
+						{% markdown %}{{ note.description }}{% endmarkdown %}
+					{% endautoescape %}
+				</p>
+			{% endfor %}
+		{% endif%}
+	{% endwith %}
 
 {% endblock %}
 
