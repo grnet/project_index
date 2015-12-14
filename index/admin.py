@@ -22,7 +22,7 @@ class RepositoryInline(admin.TabularInline):
 
 class NoteInline(admin.TabularInline):
     extra = 0
-    model = Note
+    model = Note.project.through
 
 
 class InstanceInline(admin.TabularInline):
@@ -52,7 +52,7 @@ class DatabaseTroughInline(admin.TabularInline):
 
 class NoteDatabaseInline(admin.TabularInline):
     extra = 0
-    model = Note
+    model = Note.database.through
 
 
 class ProjectAdmin(admin.ModelAdmin):
