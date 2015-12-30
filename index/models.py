@@ -266,6 +266,25 @@ class Database(models.Model):
         return self.name
 
 
+# Describes a view from a database to another including the mysql create code
+# Used to help manage "dependencies" when dumping data from a database
+class ViewDependency(models.Model):
+    name = models.CharField(max_length=255, null=True)
+    in_db = models.ForeignKey(Database, blank=True, null=True, related_name='in_db')
+    to_dbs = models.ManyToManyField(Database, blank=True, null=True, related_name='to_dbs')
+    create_view = models.TextField(blank=True, null=True)
+
+    def __unicode__(self):
+        return self.name
+
+    @property
+    def to_dbs_list(self):
+        result = []
+        for to_db in self.to_dbs.all():
+            result.append(to_db.name)
+        return ', '.join(result)
+
+
 @receiver(post_save)
 def get_dependencies(sender, instance, created, *args, **kwargs):
     if sender == Project:

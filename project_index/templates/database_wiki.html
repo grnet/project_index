@@ -27,6 +27,20 @@
 {{ note.description }}
 {% endfor %}
 {% endif%}
+
+{% if database.in_db.all %}
+== Views =={% for view in database.in_db.all %}
+=== {{ view.name }} ===
+==== Target Databases: ====
+{% for target in view.to_dbs.all %}
+{{ target.name }}
+{% endfor %}
+{% if view.create_view %}
+==== View create SQL code: ====
+{{ view.create_view }}
+{% endif %}
+{% endfor %}
+{% endif%}
 ----
 [[Category-{{ wiki_urls.database_category }}]]
 </pre>

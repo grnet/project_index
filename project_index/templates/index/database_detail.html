@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 {% load markdown_deux_tags %}
 
+{% block extrahead %}
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.0.0/styles/default.min.css">
+{% endblock %}
+
 {% block content %}
 	<h1>{% if request.user.is_superuser %}<a href="{% url 'admin:index_database_change' database.id %}"><i class="fa fa-pencil"></i>
 </a>{% endif %}{{ database.name }}</h1>
@@ -43,6 +47,55 @@
 			{% endfor %}
 		{% endif%}
 	{% endwith %}
+
+
+	{% with database.in_db.all as views %} 
+		{% if views %}
+			<h2>Views to other Databases({{ views|length }})</h2>
+				{% for view in views %}
+					<h3>{{ view.name }}</h3>
+					<h4>Target Databases:</h4>
+					<ul class="list-group">
+					{% for target in view.to_dbs.all %}
+						<li class="list-group-item">
+							{{ target.name }}
+						</li>
+					{% endfor %}
+					</ul>
+					{% if view.create_view %}
+					<div class='mysql-code'>
+						<h4>View create SQL code:
+							<i class="fa fa-caret-square-o-right plus"></i>
+							<i class="fa fa-caret-square-o-down minus"></i>
+						</h4>
+						<pre>
+							<code class="sql">
+{{ view.create_view }}
+							</code>
+						</pre>
+					</div>
+					{% endif %}
+				{% endfor %}
+		{% endif%}
+	{% endwith %}
+
+{% endblock %}
+
+{% block extrajs %}
+<script type="text/javascript">
+$(function(){
+	$('.mysql-code').on('click', 'i', function() {
+		// $(this).parent().siblings().toggleClass('code');
+		$(this)
+			.closest('.mysql-code')
+			.toggleClass('expand');
+
+	});
+});
+
+</script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.0.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
 
 {% endblock %}
 

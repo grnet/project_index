@@ -65,3 +65,32 @@ footer {
     width: 100%;
     resize: none;
 }
+
+.mysql-code pre{
+	height: 0;
+	padding: 0 9.5px;
+	border-color: white;
+	transition: all 0.1s linear;
+}
+
+.mysql-code.expand pre{
+	height: auto;
+	padding: 9.5px;
+	border: 1px solid #ccc;
+}
+
+.mysql-code.expand .plus{
+	display:none;
+}
+
+.mysql-code.expand .minus{
+	display:inline;
+}
+
+.mysql-code .minus{
+	display:none;
+}
+
+.mysql-code i{
+	cursor:pointer;
+}

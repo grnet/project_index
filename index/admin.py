@@ -10,7 +10,8 @@ from index.models import (
     Dependency,
     Cronjob,
     Virtualenv,
-    Database
+    Database,
+    ViewDependency
 )
 from notes.models import Note
 
@@ -53,6 +54,11 @@ class DatabaseTroughInline(admin.TabularInline):
 class NoteDatabaseInline(admin.TabularInline):
     extra = 0
     model = Note
+
+
+class ViewDependencyInline(admin.TabularInline):
+    extra = 0
+    model = ViewDependency
 
 
 class ProjectAdmin(admin.ModelAdmin):
@@ -120,6 +126,7 @@ class DatabaseAdmin(admin.ModelAdmin):
 
     inlines = [
         NoteDatabaseInline,
+        ViewDependencyInline
     ]
 
     def get_project(self, obj):
@@ -134,6 +141,12 @@ class InstanceAdmin(admin.ModelAdmin):
         DatabaseTroughInline,
     ]
 
+
+class ViewDependencyAdmin(admin.ModelAdmin):
+    search_fields = ['name']
+    list_display = ('name', 'in_db', 'to_dbs_list', 'create_view')
+
+
 admin.site.register(Database, DatabaseAdmin)
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(Instance, InstanceAdmin)
@@ -142,3 +155,4 @@ admin.site.register(Host, HostAdmin)
 admin.site.register(Cronjob, CronjobAdmin)
 admin.site.register(Virtualenv, VirtualenvAdmin)
 admin.site.register(Dependency, DependencyAdmin)
+admin.site.register(ViewDependency, ViewDependencyAdmin)
