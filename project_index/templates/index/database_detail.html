@@ -47,11 +47,18 @@
 			{% endfor %}
 		{% endif%}
 	{% endwith %}
-
+	
+	{% if database.dependencies_list %}
+		<h2>Dependencies from other databases:</h2>
+		{% for dep in database.dependencies_list %}
+				<a class="list-group-item" href="{{ dep.get_absolute_url }}">{{ dep.name }}</a>
+		{% endfor %}
+	{% endif%}
 
 	{% with database.in_db.all as views %} 
 		{% if views %}
-			<h2>Views to other Databases({{ views|length }})</h2>
+			<h2>Views to other Databases({{ views|length }})
+			</h2>
 				{% for view in views %}
 					<h3>{{ view.name }}</h3>
 					<h4>Target Databases:</h4>

@@ -5,6 +5,7 @@ from django.core.urlresolvers import reverse
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from index.tasks import get_requirements, get_readme
+import itertools
 
 join = os.path.join
 
@@ -261,6 +262,15 @@ class Database(models.Model):
 
     def get_wiki_url(self):
         return reverse('wiki:database_detail', kwargs={'database_id': self.id})
+
+    @property
+    def dependencies_list(self):
+        dependencies = []
+        views = self.in_db.all()
+        for view in views:
+            for db in view.to_dbs.all():
+                dependencies.append(db)
+        return list(set(dependencies))
 
     def __unicode__(self):
         return self.name
