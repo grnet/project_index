@@ -255,7 +255,7 @@ class Database(models.Model):
     port = models.CharField(max_length=255, default='default')
     engine = models.CharField(max_length=255, default='mysql')
     app_name = models.CharField(max_length=255, blank=True)
-    instances = models.ManyToManyField(Instance, related_name='instance_info')
+    instances = models.ManyToManyField(Instance, related_name='instance_info', null=True, blank=True)
 
     def get_absolute_url(self):
         return reverse('databases:detail', kwargs={'id': self.id})
