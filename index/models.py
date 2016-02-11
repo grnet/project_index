@@ -283,6 +283,7 @@ class ViewDependency(models.Model):
     in_db = models.ForeignKey(Database, blank=True, null=True, related_name='in_db')
     to_dbs = models.ManyToManyField(Database, blank=True, null=True, related_name='to_dbs')
     create_view = models.TextField(blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
 
     def __unicode__(self):
         return self.name

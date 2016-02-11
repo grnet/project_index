@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% load markdown_deux_tags %}
-
 {% block extrahead %}
 	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.0.0/styles/default.min.css">
 {% endblock %}
@@ -60,7 +59,14 @@
 			<h2>Views to other Databases({{ views|length }})
 			</h2>
 				{% for view in views %}
-					<h3>{{ view.name }}</h3>
+				<div class="myli">
+					<h2>{{ view.name }}</h2>
+					{% if view.description %}
+					<h4>Description</h4>
+					{% markdown %}
+{{ view.description }}
+					{% endmarkdown %}
+					{% endif %}
 					<h4>Target Databases:</h4>
 					<ul class="list-group">
 					{% for target in view.to_dbs.all %}
@@ -80,8 +86,10 @@
 {{ view.create_view }}
 							</code>
 						</pre>
+						
 					</div>
 					{% endif %}
+				</div>
 				{% endfor %}
 		{% endif%}
 	{% endwith %}

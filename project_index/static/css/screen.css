@@ -94,3 +94,18 @@ footer {
 .mysql-code i{
 	cursor:pointer;
 }
+
+
+.myli:before {
+    /*Using a Bootstrap glyphicon as the bullet point*/
+    content: "\e080";
+    font-family: 'Glyphicons Halflings';
+    font-size: 15px;
+    float: left;
+    margin-top: 8px;
+    margin-left: -20px;
+}
+
+.myli{
+	margin-left: 20px;
+}
