@@ -40,6 +40,30 @@ DATABASES = {
     }
 }
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        },
+    },
+    'handlers': {
+        'mail_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler'
+        },
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+    }
+}
+
 BRANDING = {
     'project_name': 'project_index',
     'name': 'Grnet Noc',
@@ -65,3 +89,8 @@ WIKI = {
 # handle media and static files serving
 MEDIA_URL = '/media/'
 STATIC_URL = '/static/'
+
+SENTRY = {
+    'activate': False,
+    'sentry_dsn': ''
+}
