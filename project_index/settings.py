@@ -129,6 +129,8 @@ CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
 # TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 TEST_RUNNER = 'djcelery.contrib.test_runner.CeleryTestSuiteRunner'
 
+SENTRY = dict()
+
 
 def _dictmerge(a, b):
     """ deep merge two dictionaries """
@@ -147,7 +149,7 @@ for var, val in [i for i in locals().items() if i[0].startswith('EXTRA_')]:
         locals()[name] = _dictmerge(locals()[name], val)  # merge dict
 
 # check local settings for sentry activation & dsn setup
-if SENTRY['activate']:
+if SENTRY.get('activate'):
     import raven
     sentry_dsn = os.getenv("SENTRY_DSN") or SENTRY['sentry_dsn']
     if not sentry_dsn:
