@@ -9,3 +9,6 @@ local_settings.py
 
 # database
 *.db
+
+# vim .swp files
+*.swp
