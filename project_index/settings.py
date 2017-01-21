@@ -101,6 +101,7 @@ INSTALLED_APPS = (
     'index',
     'notes',
     'markdown_deux',
+    'rest_framework'
 )
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'

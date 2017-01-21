@@ -2,9 +2,6 @@ import os
 
 from django.db import models
 from django.core.urlresolvers import reverse
-from django.dispatch import receiver
-from django.db.models.signals import post_save
-import itertools
 
 join = os.path.join
 
@@ -156,10 +153,10 @@ class Instance(models.Model):
         return ', '.join(result)
 
     def __unicode__(self):
-        return '%s, %s, %s' % (
+        return '%s @ %s (%s)' % (
             self.project,
-            self.instance_type,
-            self.description
+            self.host,
+            self.instance_type
         )
 
 
@@ -288,3 +285,18 @@ class ViewDependency(models.Model):
             result.append(to_db.name)
         return ', '.join(result)
 
+class DeploymentInfo(models.Model):
+    """
+    Represents a deployment information object. This stores the deployment
+    date, the hash of the last commit and the instance.
+
+    """
+
+    instance = models.ForeignKey(Instance)
+    date = models.DateField()
+    commit_hash = models.CharField(max_length=256)
+
+    def __unicode__(self):
+        return '{} in {} - {}@{}'.format(
+            self.instance.project, self.instance.host,
+            self.commit_hash, self.date)

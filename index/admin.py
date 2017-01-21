@@ -11,7 +11,8 @@ from index.models import (
     Cronjob,
     Virtualenv,
     Database,
-    ViewDependency
+    ViewDependency,
+    DeploymentInfo
 )
 from notes.models import Note
 
@@ -156,3 +157,4 @@ admin.site.register(Cronjob, CronjobAdmin)
 admin.site.register(Virtualenv, VirtualenvAdmin)
 admin.site.register(Dependency, DependencyAdmin)
 admin.site.register(ViewDependency, ViewDependencyAdmin)
+admin.site.register(DeploymentInfo)
