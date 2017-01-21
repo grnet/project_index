@@ -4,7 +4,6 @@ from django.db import models
 from django.core.urlresolvers import reverse
 from django.dispatch import receiver
 from django.db.models.signals import post_save
-from index.tasks import get_requirements, get_readme
 import itertools
 
 join = os.path.join
@@ -28,12 +27,6 @@ class Project(models.Model):
         blank=True
     )
     public = models.BooleanField(default=True)
-
-    def get_dependencies(self):
-        return get_requirements.delay(self)
-
-    def get_readme(self):
-        return get_readme.delay(self)
 
     def search_tags(self):
         ret = str()
@@ -295,17 +288,3 @@ class ViewDependency(models.Model):
             result.append(to_db.name)
         return ', '.join(result)
 
-
-@receiver(post_save)
-def get_dependencies(sender, instance, created, *args, **kwargs):
-    if sender == Project:
-        instance.get_dependencies()
-        if not instance.description:
-            instance.get_readme()
-    if sender == Dependency:
-        if not instance.package_name:
-            pack_name = instance.pip_package_name.lower()
-            if not pack_name.startswith('python-'):
-                pack_name = 'python-' + pack_name
-            instance.package_name = pack_name
-            instance.save()
