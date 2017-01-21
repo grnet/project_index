@@ -20,7 +20,7 @@ class Project(models.Model):
         blank=True
     )
     tag = models.ManyToManyField('Tag')
-    dependencies = models.ManyToManyField('Dependency', null=True, blank=True)
+    dependencies = models.ManyToManyField('Dependency', blank=True)
     dependency_file = models.FileField(
         upload_to='dependencies',
         null=True,
@@ -248,7 +248,7 @@ class Database(models.Model):
     port = models.CharField(max_length=255, default='default')
     engine = models.CharField(max_length=255, default='mysql')
     app_name = models.CharField(max_length=255, blank=True)
-    instances = models.ManyToManyField(Instance, related_name='instance_info', null=True, blank=True)
+    instances = models.ManyToManyField(Instance, related_name='instance_info', blank=True)
 
     def get_absolute_url(self):
         return reverse('databases:detail', kwargs={'id': self.id})
@@ -274,7 +274,7 @@ class Database(models.Model):
 class ViewDependency(models.Model):
     name = models.CharField(max_length=255, null=True)
     in_db = models.ForeignKey(Database, blank=True, null=True, related_name='in_db')
-    to_dbs = models.ManyToManyField(Database, blank=True, null=True, related_name='to_dbs')
+    to_dbs = models.ManyToManyField(Database, blank=True, related_name='to_dbs')
     create_view = models.TextField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
 
