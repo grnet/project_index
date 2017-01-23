@@ -82,13 +82,19 @@
 	<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js" ></script>
 	{% block extrajs %}
-	<script type="text/javascript">
+        <script type="text/javascript">
+        window.onload = function() {
+            var input = document.getElementById("search").focus();
+        }
+        </script>
 
-	window.onload = function() {
-	  var input = document.getElementById("search").focus();
-	}
-
-	</script>
+        <!-- Raven.js for Sentry error logging -->
+        {% if SENTRY.activate %}
+            <script src="https://cdn.ravenjs.com/3.8.1/raven.min.js"></script>
+            <script>
+                Raven.config("{{SENTRY.sentry_public_dsn}}").install();
+            </script>
+        {% endif %}
 	{% endblock %}
 </body>
 </html>
