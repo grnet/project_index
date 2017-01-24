@@ -74,12 +74,17 @@
         {% if deployments %}
         <div class="inline-headers">
           <h4>Current State</h4>
-          <h4 class="pull-right"> <span class="badge"> 5 </span> </h4> 
+          <h4 class="pull-right">
+            <span class="badge"
+              data-toggle="tooltip" data-placement="right"
+              title="Undeployed commits in 'master' branch"
+              rel="tooltip" style="background-color: #d9534f;">5</span>
+          </h4> 
         </div>
         <div class="panel panel-default">
           <div class="panel-heading inline-headers">
             <h4 class="panel-title">
-                <a data-toggle="collapse" href="#collapseThree">
+                <a data-toggle="collapse" href="#collapseThree" >
                   <span class="badge libadge">
                     <i class="fa fa-code-fork"></i>
                   </span>
@@ -201,6 +206,10 @@
 {% block extrajs %}
 <script>
 $(document).ready(function (){
+
+  $(function () {
+    $("[rel='tooltip']").tooltip();
+  });
 
   var togglers = $('#modal-toggler');
   $.each(togglers, function (index,value){
