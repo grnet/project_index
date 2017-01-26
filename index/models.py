@@ -26,18 +26,18 @@ class Project(models.Model):
     public = models.BooleanField(default=True)
 
     @property
-    def deployment_ref(self):
+    def deployment_repo(self):
         """
         Returns an id which is used as a reference to the deployable
         repository.
 
         If multiple said references occur, returns the first one.
 
-        :returns: str - The deployment ref
+        :returns: :class: `index.models.Repository` - The deployment repository
         """
 
         for repo in self.repository_set.filter(deployable=True):
-            return repo.internal_id or None
+            return repo or None
         return None
 
     def search_tags(self):
@@ -88,7 +88,6 @@ class Repository(models.Model):
     project = models.ForeignKey(Project)
     public = models.BooleanField(default=True)
     deployable = models.BooleanField(default=False)
-    internal_id = models.CharField(max_length=255, null=True)
 
     def __unicode__(self):
         return self.name
@@ -175,6 +174,14 @@ class Instance(models.Model):
             self.host,
             self.instance_type
         )
+
+    def get_id(self):
+        """
+        Returns the instance's `pk` number
+
+        :returns: int - the object's `pk`
+        """
+        return int(self.pk)
 
 
 class Docs(models.Model):

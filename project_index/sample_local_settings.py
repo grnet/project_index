@@ -94,3 +94,5 @@ SENTRY = {
     'activate': False,
     'sentry_dsn': ''
 }
+
+DEPLOYMENT_API_AUTH = ''

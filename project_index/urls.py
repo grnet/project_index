@@ -23,6 +23,7 @@ from index.urls import cronjob_urls
 from index.urls import wiki_urls
 from index.urls import database_urls
 from index.urls import rest_urls
+from index.urls import instance_urls
 
 admin.autodiscover()
 
@@ -36,4 +37,5 @@ urlpatterns = patterns(
     url(r'^wiki/', include(wiki_urls, namespace='wiki')),
     url(r'^databases/', include(database_urls, namespace='databases')),
     url(r'^rest/', include(rest_urls)),
+    url(r'^instances/', include(instance_urls, namespace='instances')),
 )
