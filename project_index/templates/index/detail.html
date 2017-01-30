@@ -51,11 +51,10 @@
                       id="expander-{{instance.get_id}}">
                 Deployment Status
                 <span class="pull-right"><i class="fa fa-gear fa-spin"></i></span>
-                <span class="badge hidden" 
+                <span class="badge hidden"
                       id="commits-{{instance.get_id}}"
                       data-toggle="tooltip"
                       data-placement="right"
-                      title="Undeployed commits in 'master' branch"
                       rel="tooltip" style="color: white; background-color: #d9534f;">
                 </span>
               </button>
@@ -204,10 +203,6 @@
 <script>
 $(document).ready(function (){
 
-  $(function () {
-    $("[rel='tooltip']").tooltip();
-  });
-
   function restoreAllPresented(){
 
     $('#presenter').children().find('.deployment-info').addClass('hidden');
@@ -247,7 +242,7 @@ $(document).ready(function (){
 
     var commitPanel = '';
     commitPanel += '<samp>';
-    commitPanel += '<div style="color:#5cb85c">'; 
+    commitPanel += '<div style="color:#5cb85c">';
     commitPanel += 'commit ' + identifier + '<br/>';
     commitPanel += '</div>';
     commitPanel += 'Author: ' + author + '<br/>';
@@ -264,38 +259,51 @@ $(document).ready(function (){
     var url = $(this).data('url') + '?project=' + $(this).data('project-slug');
     var that = this;
     var instance_id = this.id.split('-')[2];
-    console.log(url);
     $.get(url)
 
       .done(function(data){
+
+        var commitData = data.data;
+
         $(that).find('[id^="commits"]').each(function(){
           $(this).prev().addClass('hidden');
-          if (data.length > 0){
-            $(this).html(data.length);
-            $(this).removeClass('hidden');
+          var htmlMessage;
+          var tooltipText; 
+          if (data.status.type === 'success'){
+            htmlMessage = commitData.length;
+            tooltipText = "Undeployed commits in 'master' branch";
+            var index;
+            for (index = commitData.length-1 ; index >= 0; index--){
+
+              var commitRowId = 'commit-toggler-' + instance_id + '-' + index;
+
+              var commitRow = '<li class="list-group-item" ';
+                commitRow += 'id="' + commitRowId +'"';
+                commitRow += 'data-c-id="' + commitData[index].identifier + '"';
+                commitRow += 'data-c-auth="' + commitData[index].author + '"';
+                commitRow += 'data-c-date="' + commitData[index].date + '"';
+                commitRow += 'data-c-message="' + commitData[index].message + '"';
+                commitRow += '>';
+                commitRow += '<samp>' + commitData[index].identifier + '</samp>';
+                commitRow += '</li>';
+
+              $('#commit-list-' + instance_id).append(commitRow);
+              $('#' + commitRowId).bind('click', presentCommit);
+            }
           }
-          var index;
-          for (index = data.length-1 ; index >= 0; index--){
-
-            commitRowId = 'commit-toggler-' + instance_id + '-' + index;
-
-            commitRow = '<li class="list-group-item" ';
-            commitRow += 'id="' + commitRowId +'"';
-            commitRow += 'data-c-id="' + data[index].identifier + '"';
-            commitRow += 'data-c-auth="' + data[index].author + '"';
-            commitRow += 'data-c-date="' + data[index].date + '"';
-            commitRow += 'data-c-message="' + data[index].message + '"';
-            commitRow += '>';
-            commitRow += '<samp>' + data[index].identifier + '</samp>';
-            commitRow += '</li>';
-
-            $('#commit-list-' + instance_id).append(commitRow);
-            $('#' + commitRowId).bind('click', presentCommit);
+          else{
+            htmlMessage = '!';
+            tooltipText = data.status.type + ': ' + data.status.message;
           }
-        }) 
+
+          $(this).html(htmlMessage);
+          $(this).removeClass('hidden');
+          $(this).tooltip({title: tooltipText});
+
+        })
         $(that).find($('[id^="expander"]')).bind('click', presentInstance);
       })
-  }); 
+  });
 });
 
 

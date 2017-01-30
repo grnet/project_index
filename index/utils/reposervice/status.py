@@ -7,6 +7,12 @@ from urllib2 import Request, urlopen
 
 from django.conf import settings
 
+class RetrieverError(RuntimeError):
+    """
+    Raised when retriever cannot communicate with the API
+    """
+    pass
+
 class ProjectStatusRetriever(object):
     """
     Implements an interface which is used to connect with a repository
@@ -118,7 +124,13 @@ class PhabricatorRetriever(ProjectStatusRetriever):
         self.repo_name = ''
         super(PhabricatorRetriever, self).__init__(
             self.get_api_url(url), {'api.token': api_token})
-        self.set_repo(url)
+        try:
+            self.set_repo(url)
+        except:
+            raise RetrieverError(
+                'Cannot initiate PhabricatorRetriever. Did you provide '
+                'a valid Phabricator URL? ("{}")'.format(url))
+
 
     def set_repo(self, url):
         """
