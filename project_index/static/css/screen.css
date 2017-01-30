@@ -128,16 +128,6 @@ div.list-group a {
     margin-left: 7px;
 }
 
-/* .toplevel{ */
-/*     padding: 0px 0px 0px 0px; */
-/* } */
-/*  */
-/* .panel-group > .list-group-item { */
-/*     border-top: 0px; */
-/*     border-left: 0px; */
-/*     border-right: 0px; */
-/* } */
-
 .inline-headers h4 , .inline-headers h3{
   display: inline-block;
   vertical-align: baseline;
@@ -153,4 +143,9 @@ libadge-right {
 
 .hidden {
     display: none;
+}
+
+.commit-list {
+    max-height: 200px;
+    overflow-y: auto;
 }
