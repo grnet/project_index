@@ -89,7 +89,33 @@
             <li class="list-group-item"> Virtualenv: {{ instance.virtualenv.name }}</li>
             {% endif %}
           </div>
+          {% if instance.deploymentinfo_set.all %}
+          {% with instance.deploymentinfo_set.all as deployments %}
+          <div class="hidden deployments-info">
+            <h4>Deployments information</h4>
+            <div class="list-group">
+              <a class="list-group-item">
+                Undeployed commits
+              </a>
+              {% for deployment in deployments %}
+              <a class="list-group-item">
+                <span class="label label-primary">
+                  <i class="fa fa-user"></i>
+                  safts
+                </span>
+                &nbsp;
+                <samp>{{deployment.commit_hash | slice:":8"}}</samp>
+                @
+                <span>{{deployment.date}}</span>
+                <span class="badge hidden">5</span>
+              </a>
+              {% endfor %}
+            </div>
+          </div>
+          {% endwith %}
+          {% endif %}
         </div>
+        {% if instance.deploymentinfo_set.all %}
         <div class="col-lg-6 hidden deployment-info">
           <div class="panel panel-default">
             <div class="panel-heading inline-headers">
@@ -108,6 +134,7 @@
               <div>
                 Undeployed Commits (<i>oldest first</i>):
               </div>
+              <br/>
               <div class="list-group commit-list" id="commit-list-{{instance.get_id}}">
               </div>
               <div class="well hidden" id="commit-presentation-{{instance.get_id}}">
@@ -115,6 +142,7 @@
             </div>
           </div>
         </div>
+        {% endif %}
       </div>
       {% endfor %}
     </div>
@@ -220,8 +248,9 @@ $(document).ready(function (){
     var instanceHolder = $('#instance-holder-' + this.id.split('-')[1]);
     // remove element from "instance-holder", add it to "presenter"
     instanceHolder.detach().appendTo($('#presenter'));
-    // display "deployment-info" div
-    instanceHolder.find('.deployment-info').removeClass('hidden');
+    //instanceHolder.find('.deployment-info').removeClass('hidden');
+    // display "deployments-info" div
+    instanceHolder.find('.deployments-info').removeClass('hidden');
     // Collapse list with commits
     instanceHolder.find('#collapse-' + this.id.split('-')[1]).addClass('in');
     // Scroll window to top
@@ -284,7 +313,8 @@ $(document).ready(function (){
                 commitRow += 'data-c-date="' + commitData[index].date + '"';
                 commitRow += 'data-c-message="' + commitData[index].message + '"';
                 commitRow += '>';
-                commitRow += '<samp>' + commitData[index].identifier + '</samp>';
+                commitRow += '<code>#' + commitData[index].identifier.slice(0,6) + '</code> ';
+                commitRow += '<samp>' + commitData[index].summary + '</samp>';
                 commitRow += '</li>';
 
               $('#commit-list-' + instance_id).append(commitRow);

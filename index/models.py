@@ -319,8 +319,9 @@ class DeploymentInfo(models.Model):
     instance = models.ForeignKey(Instance)
     date = models.DateField()
     commit_hash = models.CharField(max_length=256)
+    user = models.CharField(max_length=256, null=True)
 
     def __unicode__(self):
-        return '{} in {} - {}@{}'.format(
+        return '{} in {} - {}@{} (by {})'.format(
             self.instance.project, self.instance.host,
-            self.commit_hash, self.date)
+            self.commit_hash, self.date, self.user)
