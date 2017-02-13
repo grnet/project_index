@@ -1,0 +1,3 @@
+[submodule "lintconfig"]
+	path = lintconfig
+	url = http://phab.noc.grnet.gr/diffusion/LINTC/lintconfig.git
