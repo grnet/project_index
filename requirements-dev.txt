@@ -1,0 +1,6 @@
+ipython
+ipdb
+pytest
+pytest-django
+flake8
+pytest-cov

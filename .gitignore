@@ -12,3 +12,6 @@ local_settings.py
 
 # vim .swp files
 *.swp
+
+# coverage local cache
+.coverage
