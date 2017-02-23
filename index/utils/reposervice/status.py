@@ -1,10 +1,13 @@
+"""
+Utils for retrieving a repository status from an
+external API
+"""
 import abc
 import json
 
 from collections import OrderedDict
 from urllib import urlencode
 from urllib2 import Request, urlopen
-from itertools import islice
 
 from django.conf import settings
 
@@ -158,16 +161,8 @@ class PhabricatorRetriever(ProjectStatusRetriever):
         Returns the phabricator "name" for a commit object.
 
         The name is formed as callsign + commit hash
-
-        :param repo_callsign: the repository phabricator callsign
-        :type repo_callsign: str
-
-        :param commit: the commit hash
-        :type commit: str
-
-        :returns: the phabricator commit name
-        :rtype: str
         """
+
         return repo_callsign + commit
 
     def set_repo(self, url):
@@ -218,7 +213,26 @@ class PhabricatorRetriever(ProjectStatusRetriever):
     def get_recent_commits(self, number=20):
         """
         Makes a request in phabricator "Conduit" API and retrieves the
-        latest commits for the repository it is initialized.
+        latest commits for the repository
+
+        Phabricator indexes commits by their parent. This means that
+        when calling `diffusion.querycommits` the commits are not in the
+        order they appear in the `master` branch.
+
+        To get the most recent commits in master:
+
+        1. call `diffusion.getrecentcommitsbypath` to get the most recent
+        commits. This returns only commit names.
+
+        2. use the names & call `diffusion.querycommits` to get every commit's
+        additional info (message, identifier (hash) etc). Again, the
+        returned list contains commits in a different order. The commits
+        are indexed by `phid` but the response also contains an
+        `identifierMap` which maps commit names with `phid`s.
+
+        3. use the order we know is correct from
+        `diffusion.getrecentcommitsbypath` and the index to build the list
+        of commits in the order we need it.
 
         :param number: The number of commits to retrieve
         :type number: int
@@ -240,13 +254,12 @@ class PhabricatorRetriever(ProjectStatusRetriever):
         data = {}
 
         for idx, value in enumerate(r1_data['result']):
-            data.update({'names[' + str(idx) + ']': value})
+            data.update({'names[' + str(idx) + ']': value[1:]})
 
-        data = {
+        data.update({
             'repositoryPHID': self.repo_phid,
-            'limit': number,
             'needMessages': True
-        }
+        })
 
         request = self.build_request('diffusion.querycommits', data=data)
 
@@ -254,7 +267,17 @@ class PhabricatorRetriever(ProjectStatusRetriever):
 
         # use `OrderedDict` to maintain order of commits
         data = json.loads(response.read(), object_pairs_hook=OrderedDict)
-        return data['result']['data']
+
+        result_data = []
+        res_data = data.get('result').get('data')
+        res_idmap = data.get('result').get('identifierMap')
+
+        for value in r1_data['result']:
+            ord_key = res_data.get(res_idmap.get(value[1:])).get('phid')
+            ord_value = res_data.get(ord_key)
+            result_data.append(ord_value)
+
+        return result_data
 
     def get_commits_between_refs(self, ref_start, ref_end, max_refs=50):
         """
@@ -291,9 +314,7 @@ class PhabricatorRetriever(ProjectStatusRetriever):
         while limit < max_refs:
             resp = self.get_recent_commits(number=limit)
             if phid_start in resp and phid_end in resp:
-                return OrderedDict(
-                    islice(resp.viewitems(), resp.keys().index(phid_end),
-                           resp.keys().index(phid_start)))
+                return OrderedDict(resp[phid_end:phid_start])
         raise RetrieverError(
             "Range could not be found in the {} most recent commits".format(
                 max_refs))
