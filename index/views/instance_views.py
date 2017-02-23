@@ -7,6 +7,18 @@ from index.models import Project, Instance
 
 from ..utils.reposervice.status import PhabricatorRetriever, RetrieverError
 
+def get_deployment_details(request, depl_id):
+    """
+    Returns the details for a specific deployment.
+
+
+    :param depl_id: the `DeploymentInfo` object id
+    :type depl_id: int
+
+    :returns: `django.http.HttpResponse`
+    """
+
+
 def get_project_state(request, instance_id):
     """
     Returns all commits made on branch 'master' that have been
