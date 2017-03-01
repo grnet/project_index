@@ -73,7 +73,7 @@ def get_project_state(request, instance_id):
         }
         response['data'] = []
 
-        for commit in commits.values():
+        for commit in commits:
             if commit['identifier'] == instance_hash:
                 break
             response['data'] = response['data'] + [{

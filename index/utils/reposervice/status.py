@@ -54,7 +54,7 @@ class ProjectStatusRetriever(object):
 
         :returns: tuple
         """
-        pass
+        raise NotImplementedError
 
     def build_request(self, endpoint='', **kwargs):
         """
@@ -273,7 +273,7 @@ class PhabricatorRetriever(ProjectStatusRetriever):
         res_idmap = data.get('result').get('identifierMap')
 
         for value in r1_data['result']:
-            ord_key = res_data.get(res_idmap.get(value[1:])).get('phid')
+            ord_key = res_idmap.get(value[1:])
             ord_value = res_data.get(ord_key)
             result_data.append(ord_value)
 
@@ -284,7 +284,9 @@ class PhabricatorRetriever(ProjectStatusRetriever):
         Returns details for the commits between `ref_start`, `ref_end`
         (including those).
 
-        Repeatedly queries the phabricator API to retrieve
+        Repeatedly queries the phabricator API, requiring an increasing
+        number of commits each time trying to retrieve the range
+        specified (start = oldest commit, end = earliest).
 
         :param ref_start: the commit hash to start from
         :type ref_start: str
@@ -312,9 +314,17 @@ class PhabricatorRetriever(ProjectStatusRetriever):
         )['result'].values()[0]['phid']
 
         while limit < max_refs:
-            resp = self.get_recent_commits(number=limit)
-            if phid_start in resp and phid_end in resp:
-                return OrderedDict(resp[phid_end:phid_start])
+            try:
+                resp = self.get_recent_commits(number=limit)
+                start = next(
+                    item for item in resp if item.get('phid') == phid_start)
+                end = next(
+                    item for item in resp if item.get('phid') == phid_end)
+                commits = resp[resp.index(end):resp.index(start)+1]
+                commits.reverse()
+                return commits
+            except (StopIteration, ValueError):
+                limit += 10
         raise RetrieverError(
             "Range could not be found in the {} most recent commits".format(
                 max_refs))

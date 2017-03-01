@@ -85,3 +85,17 @@ It also produces the following categories:
 	Category-MyHosts
 	Category-MyCronjobs
 	Category-MyDatabases
+
+## Testing
+
+To run the tests, you need to install the test requirements. To do so:
+
+    pip install requirements-dev.txt
+
+Then, to run all the tests:
+
+    pytest
+
+To run & produce detailed HTML coverage reports:
+    
+    pytest --cov='.' --cov-config=.coveragerc --cov-report=html:cov_html
