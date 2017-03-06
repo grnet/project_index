@@ -8,3 +8,8 @@ omit =
     manage.py
     *wsgi.py
     *settings.py
+
+[report]
+exclude_lines =
+    pragma: no cover
+    raise NotImplementedError
