@@ -27,3 +27,7 @@ def menu(request):
         if m.get('url') == path:
             m.update({'active': 'active'})
     return {'menu': menu}
+
+
+def sentry(request):
+    return settings.SENTRY
