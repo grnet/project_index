@@ -41,7 +41,7 @@
       {% for instance in instances %}
       <div id="instance-holder-{{instance.get_id}}">
         <div class="col-lg-6" id="instance-panel-{{instance.get_id}}"
-             data-url="{% url 'instances:project-state' instance.get_id %}"
+             data-url="{% url 'instances:undeployed-commits' instance.get_id %}"
              data-project-slug="{{project.slug}}">
           <div>
             <h3>

@@ -19,7 +19,7 @@ def get_deployment_details(request, depl_id):
     """
 
 
-def get_project_state(request, instance_id):
+def get_undeployed_commits(request, instance_id):
     """
     Returns all commits made on branch 'master' that have been
     made after the latest deployment on an instance.
