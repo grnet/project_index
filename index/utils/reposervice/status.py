@@ -3,6 +3,7 @@ Utils for retrieving a repository status from an
 external API
 """
 import abc
+import datetime
 import json
 
 from collections import OrderedDict
@@ -85,7 +86,7 @@ class PhabricatorRetriever(ProjectStatusRetriever):
     Implements a `ProjectStatusRetriever` for the Phabricator
     repository service.
 
-        """
+    """
 
     def __init__(
             self, url, api_token=getattr(settings, 'PHABRICATOR_API_TOKEN')):
@@ -164,6 +165,28 @@ class PhabricatorRetriever(ProjectStatusRetriever):
         """
 
         return repo_callsign + commit
+
+    @staticmethod
+    def get_commit_lite_dict(commit, fields=(
+            'identifier', 'summary', 'author', 'message', 'date')):
+        """
+        Returns a dictionary with the most interesting fields
+        of a commit.
+
+        :param commit: The dictionary containing the commit's details
+        :type commit: dict
+        :param fields: The commit fields to return (defaults to:
+        'identifier', 'summary', 'author', 'message', 'date')
+        :type fields: tuple
+        :returns: a dictionary with the most interesting commit fields
+        :rtype: dict
+        """
+
+        commit_dict = {key: commit.get(key) for key in fields}
+        if 'date' in fields:
+            commit_dict.update({'date': datetime.datetime.fromtimestamp(
+                commit.get('authorEpoch')).strftime('%c')})
+        return commit_dict
 
     def set_repo(self, url):
         """
@@ -288,10 +311,10 @@ class PhabricatorRetriever(ProjectStatusRetriever):
         number of commits each time trying to retrieve the range
         specified (start = oldest commit, end = earliest).
 
-        :param ref_start: the commit hash to start from
+        :param ref_start: the commit hash to start from (oldest commit)
         :type ref_start: str
 
-        :param ref_end: the commit ref to end
+        :param ref_end: the commit ref to end (earliest commit)
         :type ref_end: str
 
         :param max_refs: the maximum number of commits to return
@@ -304,27 +327,42 @@ class PhabricatorRetriever(ProjectStatusRetriever):
         retrieved commits
         """
 
+        def process_commits(phid_start, phid_end, resp):
+            start = next(
+                item for item in resp if item.get('phid') == phid_start) if (
+                    phid_start) else None
+            end = next(
+                item for item in resp if item.get('phid') == phid_end)
+            commits = resp[resp.index(end):resp.index(start)+1] if (
+                start) else resp[resp.index(end):]
+            commits.reverse()
+            return commits
+
         limit = 10
+        limit_increase_step = 10
 
         phid_start = self.get_phids_for_objects(
             [self.get_commit_name(self.repo_name, ref_start)]
-        )['result'].values()[0]['phid']
+        )['result'].values()[0]['phid'] if ref_start else None
         phid_end = self.get_phids_for_objects(
             [self.get_commit_name(self.repo_name, ref_end)]
         )['result'].values()[0]['phid']
 
+        if not phid_start:
+            try:
+                resp = self.get_recent_commits(number=max_refs)
+                return process_commits(phid_start, phid_end, resp)
+            except (StopIteration, ValueError):
+                raise RetrieverError(
+                    "Range could not be found in the {} most recent"
+                    "commits".format(max_refs))
+
         while limit < max_refs:
             try:
                 resp = self.get_recent_commits(number=limit)
-                start = next(
-                    item for item in resp if item.get('phid') == phid_start)
-                end = next(
-                    item for item in resp if item.get('phid') == phid_end)
-                commits = resp[resp.index(end):resp.index(start)+1]
-                commits.reverse()
-                return commits
+                return process_commits(phid_start, phid_end, resp)
             except (StopIteration, ValueError):
-                limit += 10
+                limit += limit_increase_step
         raise RetrieverError(
             "Range could not be found in the {} most recent commits".format(
                 max_refs))

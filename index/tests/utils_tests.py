@@ -127,7 +127,7 @@ def phid_lookup(data, request):
             'typeName': 'Diffusion Commit',
             'name': name,
             'fullname': '{}: A commit message'.format(name),
-            'status': 'open'
+            'status': 'open',
         }
 
     names = [
@@ -173,6 +173,7 @@ def diffusion_querycommits(data, request):
                 "summary": "Some interesting summary",
                 "author": "Mighty Programmer <mighty@programmer.com>",
                 "phid": commit_phid(name),
+                "authorEpoch": 1484159931
             }
         }
 
@@ -232,6 +233,37 @@ class TestPhabricatorRetriever(object):
         with pytest.raises(RetrieverError):
             PhabricatorRetriever('aaa')
 
+    def test_get_commit_lite_dict_default(self, data, monkeypatch):
+        self.monkeypatch_urllib_urlopen(monkeypatch, data)
+
+        retriever = PhabricatorRetriever(data.get('url'))
+
+        commits = retriever.get_recent_commits(number=2)
+
+        for commit in commits:
+            commit_dict = retriever.get_commit_lite_dict(commit)
+            assert isinstance(commit_dict, dict)
+            assert 'identifier' in commit_dict
+            assert 'summary' in commit_dict
+            assert 'author' in commit_dict
+            assert 'message' in commit_dict
+            assert 'date' in commit_dict
+
+    def test_get_commit_lite_dict_modified_fields(self, data, monkeypatch):
+        self.monkeypatch_urllib_urlopen(monkeypatch, data)
+
+        retriever = PhabricatorRetriever(data.get('url'))
+
+        commits = retriever.get_recent_commits(number=2)
+
+        for commit in commits:
+            commit_dict = retriever.get_commit_lite_dict(
+                commit, fields=('identifier', 'summary'))
+            assert isinstance(commit_dict, dict)
+            assert 'identifier' in commit_dict
+            assert 'summary' in commit_dict
+            assert len(commit_dict.keys()) == 2
+
     def test_get_recent_commits(self, data, monkeypatch):
         self.monkeypatch_urllib_urlopen(monkeypatch, data)
 
@@ -270,14 +302,99 @@ class TestPhabricatorRetriever(object):
                     comm for comm in reversed(recentcommits.values()[4:9])
                 ][index]) == commits[index].get('identifier'))
 
+    def test_get_commits_between_refs_invalid_all(self, monkeypatch, data):
+
+        self.monkeypatch_urllib_urlopen(monkeypatch, data)
+
+        retriever = PhabricatorRetriever(data.get('url'))
+
         with pytest.raises(RetrieverError):
-            commits = retriever.get_commits_between_refs(
+            retriever.get_commits_between_refs(
                 'invalid_ref1', 'invalid_ref2')
 
+    def test_get_commits_between_refs_invalid_end(self, monkeypatch, data):
+
+        def hash_from_name(value):
+            return value.split(data.get('name'))[1]
+
+        self.monkeypatch_urllib_urlopen(monkeypatch, data)
+
+        retriever = PhabricatorRetriever(data.get('url'))
+
+        recentcommits = data.get('recentcommits')
+
+        existing_refs = [
+            hash_from_name(recentcommits.values()[8][1:]),
+            hash_from_name(recentcommits.values()[4][1:])
+        ]
         with pytest.raises(RetrieverError):
-            commits = retriever.get_commits_between_refs(
+            retriever.get_commits_between_refs(
                 existing_refs[0], 'invalid_ref2')
 
+    def test_get_commits_between_refs_invalid_start(self, monkeypatch, data):
+
+        def hash_from_name(value):
+            return value.split(data.get('name'))[1]
+
+        self.monkeypatch_urllib_urlopen(monkeypatch, data)
+
+        retriever = PhabricatorRetriever(data.get('url'))
+
+        recentcommits = data.get('recentcommits')
+
+        existing_refs = [
+            hash_from_name(recentcommits.values()[8][1:]),
+            hash_from_name(recentcommits.values()[4][1:])
+        ]
+        with pytest.raises(RetrieverError):
+            retriever.get_commits_between_refs(
+                'invalid_ref1', existing_refs[0])
+
+    def test_get_commits_between_refs_reverse(self, monkeypatch, data):
+
+        def hash_from_name(value):
+            return value.split(data.get('name'))[1]
+
+        self.monkeypatch_urllib_urlopen(monkeypatch, data)
+
+        retriever = PhabricatorRetriever(data.get('url'))
+
+        recentcommits = data.get('recentcommits')
+
+        existing_refs = [
+            hash_from_name(recentcommits.values()[8][1:]),
+            hash_from_name(recentcommits.values()[4][1:])
+        ]
         commits = retriever.get_commits_between_refs(
             existing_refs[1], existing_refs[0])
         assert commits == []
+
+    def test_get_commits_between_refs_no_start_ref(self, monkeypatch, data):
+
+        def hash_from_name(value):
+            return value.split(data.get('name'))[1]
+
+        self.monkeypatch_urllib_urlopen(monkeypatch, data)
+
+        retriever = PhabricatorRetriever(data.get('url'))
+
+        recentcommits = data.get('recentcommits')
+
+        existing_refs = [
+            hash_from_name(recentcommits.values()[8][1:]),
+            hash_from_name(recentcommits.values()[4][1:])
+        ]
+        commits = retriever.get_commits_between_refs(
+            None, existing_refs[0])
+        assert len(commits) == 18
+
+    def test_get_commits_between_refs_no_start_invalid_end(
+            self, monkeypatch, data):
+
+        self.monkeypatch_urllib_urlopen(monkeypatch, data)
+
+        retriever = PhabricatorRetriever(data.get('url'))
+
+        with pytest.raises(RetrieverError):
+            retriever.get_commits_between_refs(
+                None, 'invalid_ref2')
