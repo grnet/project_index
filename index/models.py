@@ -325,3 +325,11 @@ class DeploymentInfo(models.Model):
         return '{} in {} - {}@{} (by {})'.format(
             self.instance.project, self.instance.host,
             self.commit_hash, self.date, self.user)
+
+    def get_id(self):
+        """
+        Returns the `DeploymentInfo's `pk` number
+
+        :returns: int - the object's `pk`
+        """
+        return int(self.pk)
