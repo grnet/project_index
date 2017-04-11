@@ -40,9 +40,7 @@
     <div class="row" id="holder">
       {% for instance in instances %}
       <div id="instance-holder-{{instance.get_id}}">
-        <div class="col-lg-6" id="instance-panel-{{instance.get_id}}"
-             data-url="{% url 'instances:undeployed-commits' instance.get_id %}"
-             data-project-slug="{{project.slug}}">
+        <div class="col-lg-6" id="instance-panel-{{instance.get_id}}">
           <div>
             <h3>
               <span>{{ instance.get_instance_type_display }}</span>
@@ -50,13 +48,6 @@
               <button class="btn btn-default pull-right"
                       id="expander-{{instance.get_id}}">
                 Deployment Status
-                <span class="pull-right"><i class="fa fa-gear fa-spin"></i></span>
-                <span class="badge hidden"
-                      id="commits-{{instance.get_id}}"
-                      data-toggle="tooltip"
-                      data-placement="right"
-                      rel="tooltip" style="color: white; background-color: #d9534f;">
-                </span>
               </button>
               {% endif %}
             </h3>
@@ -94,20 +85,28 @@
           <div class="hidden deployments-info">
             <h4>Deployments information</h4>
             <div class="list-group">
-              <a class="list-group-item">
-                Undeployed commits
+              <a class="list-group-item" id="undeployed-commits-{{instance.get_id}}"
+                 data-url="{% url 'instances:undeployed-commits' instance.get_id %}"
+                 data-project-slug="{{project.slug}}">
+                <span class="title"> Undeployed commits </span>
+                <span class="gear pull-right hidden"><i class="fa fa-gear fa-spin"></i></span>
+                <span class="badge hidden">
+                </span>
               </a>
               {% for deployment in deployments %}
-              <a class="list-group-item">
+              <a class="list-group-item" id="deployment-commits-{{instance.get_id}}"
+                 data-url="{% url 'instances:deployment-details' deployment.get_id %}">
                 <span class="label label-primary">
-                  <i class="fa fa-user"></i>
-                  safts
+                  <i class="fa fa-user"></i> {{deployment.user}}
                 </span>
                 &nbsp;
-                <samp>{{deployment.commit_hash | slice:":8"}}</samp>
-                @
-                <span>{{deployment.date}}</span>
-                <span class="badge hidden">5</span>
+                <span class="title">
+                  <samp>{{deployment.commit_hash | slice:":8"}}</samp> @
+                  <span>{{deployment.date}}</span>
+                </span>
+                <span class="gear pull-right hidden"><i class="fa fa-gear fa-spin"></i></span>
+                <span class="badge hidden">
+                </span>
               </a>
               {% endfor %}
             </div>
@@ -116,7 +115,7 @@
           {% endif %}
         </div>
         {% if instance.deploymentinfo_set.all %}
-        <div class="col-lg-6 hidden deployment-info">
+        <div class="col-lg-6 hidden deployment-details-{{instance.get_id}}">
           <div class="panel panel-default">
             <div class="panel-heading inline-headers">
               <h4 class="panel-title">
@@ -124,15 +123,13 @@
                   <span class="badge libadge">
                     <i class="fa fa-code-fork"></i>
                   </span>
-                  <strong>Latest Deployment: </strong>
-                  <samp>{{instance.deploymentinfo_set.all.0.commit_hash |slice:":8"}}...</samp>
-                  deployed at <strong>{{instance.deploymentinfo_set.all.0.date}}</strong>
+                  <strong>Commits</strong>
                 </span>
               </h4>
             </div>
             <div class="panel-body">
               <div>
-                Undeployed Commits (<i>oldest first</i>):
+                Commits list (<i>oldest first</i>):
               </div>
               <br/>
               <div class="list-group commit-list" id="commit-list-{{instance.get_id}}">

@@ -27,7 +27,8 @@ $(document).ready(function (){
    */
   function restoreAllPresented(){
 
-    $('#presenter').children().find('.deployment-info').addClass('hidden');
+    $('#presenter').children().find('[class*="deployment-details-"]').addClass('hidden');
+    $('#presenter').children().find('[class*="deployments-info"]').addClass('hidden');
     $('#presenter').children().detach().appendTo($('#holder'));
     $('#holder').children().find('[id^="collapse-"]').removeClass('in');
     // rebind previously removed handler
@@ -55,61 +56,67 @@ $(document).ready(function (){
     $(this).parent().parent().children('div.well').html(commitPanel);
     $(this).parent().parent().children('div.well').removeClass('hidden');
   }
+  $('[id^="expander"]').bind('click', presentInstance);
 
-  $('[id^="instance-panel-"]').each(function () {
-    var url = $(this).data('url') + '?project=' + $(this).data('project-slug');
+  // $('[id^="instance-panel-"]').each(function () {
+  $('[id^="undeployed-commits-"], [id^="deployment-commits-"]').click(function () {
+    var url = $(this).data('url');
+
+    if ($(this).data('project-slug')){
+      url += '?project=' + $(this).data('project-slug');
+    }
+
+    $('.deployment-selected').removeClass('deployment-selected');
+    $(this).addClass('deployment-selected');
     var that = this;
     var instance_id = this.id.split('-')[2];
+    $(that).find('span[class^="gear"]').removeClass('hidden');
 
     $.get(url).done(function(data){
 
+      $('#commit-list-' + instance_id).children().detach();
       var commitData = data.data;
 
-      // this is actually run for one element. See if we can
-      // replace `each` with something more specific
-      $(that).find('[id^="commits"]').each(function(){
-        $(this).prev().addClass('hidden');
-        var htmlMessage;
-        var tooltipText; 
-        if (data.status.type === 'success'){
-          htmlMessage = commitData.length;
-          tooltipText = "Undeployed commits in 'master' branch";
-          var index;
-          for (index = commitData.length-1 ; index >= 0; index--){
+      var htmlMessage;
+      var tooltipText;
+      // need case if status is not success
+      if (data.status.type === 'success'){
+        htmlMessage = commitData.length;
+        var index;
+        for (index = commitData.length-1 ; index >= 0; index--){
 
-            var commitRowId = 'commit-toggler-' + instance_id + '-' + index;
+          var commitRowId = 'commit-toggler-' + instance_id + '-' + index;
 
-            var commitRow = '<li class="list-group-item" ';
-            commitRow += 'id="' + commitRowId +'"';
-            commitRow += 'data-c-id="' + commitData[index].identifier + '"';
-            commitRow += 'data-c-auth="' + commitData[index].author + '"';
-            commitRow += 'data-c-date="' + commitData[index].date + '"';
-            commitRow += 'data-c-message="' + commitData[index].message + '"';
-            commitRow += '>';
-            commitRow += '<code>#' + commitData[index].identifier.slice(0,6);
-            commitRow += '</code> ';
-            commitRow += '<samp>' + commitData[index].summary + '</samp>';
-            commitRow += '</li>';
+          var commitRow = '<li class="list-group-item" ';
+          commitRow += 'id="' + commitRowId +'"';
+          commitRow += 'data-c-id="' + commitData[index].identifier + '"';
+          commitRow += 'data-c-auth="' + commitData[index].author + '"';
+          commitRow += 'data-c-date="' + commitData[index].date + '"';
+          commitRow += 'data-c-message="' + commitData[index].message + '"';
+          commitRow += '>';
+          commitRow += '<code>#' + commitData[index].identifier.slice(0,6);
+          commitRow += '</code> ';
+          commitRow += '<samp>' + commitData[index].summary + '</samp>';
+          commitRow += '</li>';
 
-            $('#commit-list-' + instance_id).append(commitRow);
-            $('#' + commitRowId).bind('click', presentCommit);
-          }
+          $('#commit-list-' + instance_id).append(commitRow);
+          $('#' + commitRowId).bind('click', presentCommit);
         }
-        $(this).html(htmlMessage);
-        $(this).removeClass('hidden');
-        $(this).tooltip({title: tooltipText});
-
-      });
-      $(that).find($('[id^="expander"]')).bind('click', presentInstance);
+      }
+      $(that).find('span[class^="gear"]').addClass('hidden');
+      $(that).find('span[class^="badge"]').html(htmlMessage);
+      $(that).find('span[class^="badge"]').removeClass('hidden');
+      $(that).find('span[class^="badge"]').addClass('success');
+      $('div[class*="deployment-details-' + instance_id +'"]').removeClass('hidden');
 
     }).fail(function(param1, param2, param3, param4){
 
-      // Display tooltip with error message
-      var commitSpan = $(that).find('[id^="commits"]');
-      commitSpan.prev().addClass('hidden');
-      commitSpan.html('!');
-      commitSpan.removeClass('hidden');
-      commitSpan.tooltip({title: param2 + ':' + param3});
+      $(that).find('span[class^="gear"]').addClass('hidden');
+      $(that).find('span[class^="badge"]').tooltip(
+        {title: param2 + ':' + param3, placement: 'left'});
+      $(that).find('span[class^="badge"]').html('!');
+      $(that).find('span[class^="badge"]').removeClass('hidden');
+      $(that).find('span[class^="badge"]').addClass('error');
     });
   });
 });

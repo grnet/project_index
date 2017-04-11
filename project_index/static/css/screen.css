@@ -169,4 +169,17 @@ libadge-right {
     border-bottom: 0px;
 }
 
+.badge {
+    font-weight: bold;
+}
+.badge.success {
+    background-color: #5cb85c;
+}
 
+.badge.error {
+    background-color: #d9534f;
+}
+
+.deployment-selected {
+    background-color: #efecec;
+}
