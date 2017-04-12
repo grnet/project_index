@@ -15,3 +15,12 @@ local_settings.py
 
 # coverage local cache
 .coverage
+
+# arclint file
+.arclint
+
+# pytest cache
+.cache
+
+# coverage html reports dir
+cov_html
