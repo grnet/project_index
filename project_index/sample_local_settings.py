@@ -86,6 +86,10 @@ WIKI = {
     'database_category': u'Βάσεις Δεδομένων'
 }
 
+EXTRA_TEMPLATE_CONTEXT_PROCESSORS = [
+    'project_index.context_processors.settings_vars',
+]
+
 # handle media and static files serving
 MEDIA_URL = '/media/'
 STATIC_URL = '/static/'
@@ -95,4 +99,5 @@ SENTRY = {
     'sentry_dsn': ''
 }
 
-DEPLOYMENT_API_AUTH = ''
+PHABRICATOR_API_TOKEN = ''
+DEPLOYMENT_FEATURES_ENABLED = False

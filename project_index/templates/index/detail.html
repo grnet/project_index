@@ -44,11 +44,13 @@
           <div>
             <h3>
               <span>{{ instance.get_instance_type_display }}</span>
+              {% if DEPLOYMENT_FEATURES_ENABLED %}
               {% if instance.deploymentinfo_set.all %}
               <button class="btn btn-default pull-right"
                       id="expander-{{instance.get_id}}">
                 Deployment Status
               </button>
+              {% endif %}
               {% endif %}
             </h3>
           </div>
@@ -80,6 +82,7 @@
             <li class="list-group-item"> Virtualenv: {{ instance.virtualenv.name }}</li>
             {% endif %}
           </div>
+          {% if DEPLOYMENT_FEATURES_ENABLED %}
           {% if instance.deploymentinfo_set.all %}
           {% with instance.deploymentinfo_set.all as deployments %}
           <div class="hidden deployments-info">
@@ -113,7 +116,9 @@
           </div>
           {% endwith %}
           {% endif %}
+          {% endif %}
         </div>
+        {% if DEPLOYMENT_FEATURES_ENABLED %}
         {% if instance.deploymentinfo_set.all %}
         <div class="col-lg-6 hidden deployment-details-{{instance.get_id}}">
           <div class="panel panel-default">
@@ -139,6 +144,7 @@
             </div>
           </div>
         </div>
+        {% endif %}
         {% endif %}
       </div>
       {% endfor %}
