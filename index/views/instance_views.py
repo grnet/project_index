@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from index.models import Project, Instance, DeploymentInfo
 
-from ..utils.reposervice.status import PhabricatorRetriever, RetrieverError
+from index.utils.reposervice.status import PhabricatorRetriever, RetrieverError
 
 
 def get_error_status(message):
@@ -41,8 +41,6 @@ def get_deployment_details(request, depl_id):
     previous_depl = deployments[
         deployments.index(deployment) - 1] if (
             deployments.index(deployment) - 1 >= 0) else None
-    hashes = (
-        getattr(previous_depl, 'commit_hash', None), deployment.commit_hash)
 
     try:
         hashes = (

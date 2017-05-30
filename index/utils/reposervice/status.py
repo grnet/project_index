@@ -72,8 +72,8 @@ class ProjectStatusRetriever(object):
         :rtype: :class:`urllib2.Request`
         """
 
-        data = kwargs.get('data') or dict()
-        headers = kwargs.get('headers') or dict()
+        data = kwargs.get('data', dict())
+        headers = kwargs.get('headers', dict())
 
         (data, headers) = self.authorize_request(data=data, headers=headers)
         url = self.api_url.strip('/') + '/' + endpoint
@@ -151,7 +151,9 @@ class PhabricatorRetriever(ProjectStatusRetriever):
 
         if not repo_protocol:
             raise RetrieverError(
-                'Malformed repo url: Only `http`, `https` protocols allowed')
+                'Malformed repo url: Only {} protocols allowed'.format(
+                    ','.join(['`{}`'.format(prot)
+                              for prot in accepted_protocols])))
 
         # remove 'https://', split on ('/'), keep the semi-final part
         return 'r' + url.replace(repo_protocol + '://', '').split('/')[-2]
@@ -226,7 +228,7 @@ class PhabricatorRetriever(ProjectStatusRetriever):
 
         data = {}
         for idx, name in enumerate(names):
-            data.update({'names[' + str(idx) + ']': name})
+            data.update({'names[{}]'.format(str(idx)): name})
 
         request = self.build_request('phid.lookup', data=data)
         response = urlopen(request)

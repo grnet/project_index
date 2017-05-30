@@ -38,7 +38,6 @@ class Project(models.Model):
 
         for repo in self.repository_set.filter(deployable=True):
             return repo or None
-        return None
 
     def search_tags(self):
         ret = str()
@@ -169,7 +168,7 @@ class Instance(models.Model):
         return ', '.join(result)
 
     def __unicode__(self):
-        return '%s @ %s (%s)' % (
+        return '{} @ {} ({})'.format(
             self.project,
             self.host,
             self.instance_type
