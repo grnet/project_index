@@ -116,6 +116,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'project_index.context_processors.branding',
     'project_index.context_processors.wiki',
     'project_index.context_processors.menu',
+    'project_index.context_processors.sentry',
 )
 
 AUTH_PROFILE_MODULE = 'accounts.UserProfile'
@@ -123,6 +124,8 @@ AUTH_PROFILE_MODULE = 'accounts.UserProfile'
 
 # test runner to avoid pre django 1.6 warnings
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
+
+SENTRY = dict()
 
 
 def _dictmerge(a, b):
@@ -142,7 +145,7 @@ for var, val in [i for i in locals().items() if i[0].startswith('EXTRA_')]:
         locals()[name] = _dictmerge(locals()[name], val)  # merge dict
 
 # check local settings for sentry activation & dsn setup
-if SENTRY['activate']:
+if SENTRY.get('activate'):
     import raven
     sentry_dsn = os.getenv("SENTRY_DSN") or SENTRY['sentry_dsn']
     if not sentry_dsn:
