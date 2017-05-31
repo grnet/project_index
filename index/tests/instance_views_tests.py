@@ -3,7 +3,6 @@ Tests for `index.utils.reposervice.status` module
 """
 # pylint: disable=C0111,C0103,W0621,R0201
 
-from itertools import islice
 from collections import OrderedDict
 
 import datetime

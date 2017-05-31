@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import DeploymentInfo, Instance
+from index.models import DeploymentInfo, Instance
 
 
 class DeploymentInfoSerializer(serializers.ModelSerializer):

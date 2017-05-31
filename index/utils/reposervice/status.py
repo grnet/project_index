@@ -38,7 +38,6 @@ class ProjectStatusRetriever(object):
         :param api_auth: The parameters required for authentication
         :type api_auth: dict()
 
-        :returns: None
         """
         self.api_url = api_url
         self.api_auth = api_auth
@@ -55,7 +54,7 @@ class ProjectStatusRetriever(object):
 
         :returns: tuple
         """
-        raise NotImplementedError
+        pass
 
     def build_request(self, endpoint='', **kwargs):
         """

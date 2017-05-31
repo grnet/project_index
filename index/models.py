@@ -36,8 +36,7 @@ class Project(models.Model):
         :returns: :class: `index.models.Repository` - The deployment repository
         """
 
-        for repo in self.repository_set.filter(deployable=True):
-            return repo or None
+        return self.repository_set.filter(deployable=True).first()
 
     def search_tags(self):
         ret = str()
