@@ -91,11 +91,9 @@ class TestInstanceUrls(object):
 
     @pytest.fixture
     @pytest.mark.django_db
-    def dummy_instance(self):
-        pr = self.dummy_project()
-        host = self.dummy_host()
+    def dummy_instance(self, dummy_project, dummy_host):
         return Instance.objects.create(
-            project=pr, host=host)
+            project=dummy_project, host=dummy_host)
 
     @pytest.mark.django_db
     def test_get_deployment_details_wrong_depl(self, client):
@@ -104,14 +102,13 @@ class TestInstanceUrls(object):
         ).status_code == 404
 
     @pytest.mark.django_db
-    def test_get_deployment_details_fixed_error(self, client, monkeypatch):
+    def test_get_deployment_details_fixed_error(
+            self, client, monkeypatch, dummy_host, dummy_error_project):
 
         self.monkeypatch_PhabricatorRetriever(monkeypatch)
 
-        pr = self.dummy_error_project()
-        host = self.dummy_host()
         instance = Instance.objects.create(
-            project=pr, host=host)
+            project=dummy_error_project, host=dummy_host)
         depl_info = DeploymentInfo.objects.create(
             instance=instance, date=datetime.datetime.today(),
             commit_hash="commit_hash_1", user='god')
@@ -123,13 +120,13 @@ class TestInstanceUrls(object):
         assert json.loads(resp.content)['status']['type'] == 'error'
 
     @pytest.mark.django_db
-    def test_get_deployment_details_only_one_depl(self, client, monkeypatch):
+    def test_get_deployment_details_only_one_depl(
+            self, client, monkeypatch, dummy_instance):
 
         self.monkeypatch_PhabricatorRetriever(monkeypatch)
 
-        instance = self.dummy_instance()
         depl_info = DeploymentInfo.objects.create(
-            instance=instance, date=datetime.datetime.today(),
+            instance=dummy_instance, date=datetime.datetime.today(),
             commit_hash="commit_hash_1", user='god')
         resp = client.get(
             reverse(
@@ -139,16 +136,16 @@ class TestInstanceUrls(object):
         assert json.loads(resp.content)['status']['type'] == 'success'
 
     @pytest.mark.django_db
-    def test_get_deployment_details_only_many_depls(self, client, monkeypatch):
+    def test_get_deployment_details_only_many_depls(
+            self, client, monkeypatch, dummy_instance):
 
         self.monkeypatch_PhabricatorRetriever(monkeypatch)
 
-        instance = self.dummy_instance()
         depl_info = DeploymentInfo.objects.create(
-            instance=instance, date=datetime.datetime.today(),
+            instance=dummy_instance, date=datetime.datetime.today(),
             commit_hash="commit_hash_2", user='god')
         depl_info = DeploymentInfo.objects.create(
-            instance=instance, date=(
+            instance=dummy_instance, date=(
                 datetime.datetime.today() - datetime.timedelta(days=1)),
             commit_hash="commit_hash_1", user='god')
         resp = client.get(
@@ -168,32 +165,31 @@ class TestInstanceUrls(object):
         ).status_code == 404
 
     @pytest.mark.django_db
-    def test_get_undeployed_commits_wrong_project(self, client, monkeypatch):
+    def test_get_undeployed_commits_wrong_project(
+            self, client, monkeypatch, dummy_instance):
 
         self.monkeypatch_PhabricatorRetriever(monkeypatch)
-
-        instance = self.dummy_instance()
 
         assert client.get('{}?project="wrong-slug"'.format(
             reverse(
                 'instances:undeployed-commits',
-                kwargs={'instance_id': instance.pk}
+                kwargs={'instance_id': dummy_instance.pk}
             ))).status_code == 404
 
     @pytest.mark.django_db
-    def test_get_undeployed_commits_no_depl_repo(self, client, monkeypatch):
+    def test_get_undeployed_commits_no_depl_repo(
+            self, client, monkeypatch, dummy_instance):
 
         self.monkeypatch_PhabricatorRetriever(monkeypatch)
 
-        instance = self.dummy_instance()
-        repo = instance.project.deployment_repo
+        repo = dummy_instance.project.deployment_repo
         repo.deployable = False
         repo.save()
 
         resp = client.get('{}?project=dummy-project'.format(
             reverse(
                 'instances:undeployed-commits',
-                kwargs={'instance_id': instance.pk}
+                kwargs={'instance_id': dummy_instance.pk}
             )))
         content = json.loads(resp.content)
         assert resp.status_code == 200
@@ -202,18 +198,17 @@ class TestInstanceUrls(object):
             'No deployable repo(s) found')
 
     @pytest.mark.django_db
-    def test_get_undeployed_commits_index_error(self, client, monkeypatch):
+    def test_get_undeployed_commits_index_error(
+            self, client, monkeypatch, dummy_instance):
 
         # You don't create a `DeploymentInfo` so code getting
         # the 'instance_hash' will crash
         self.monkeypatch_PhabricatorRetriever(monkeypatch)
 
-        instance = self.dummy_instance()
-
         resp = client.get('{}?project=dummy-project'.format(
             reverse(
                 'instances:undeployed-commits',
-                kwargs={'instance_id': instance.pk}
+                kwargs={'instance_id': dummy_instance.pk}
             )))
         content = json.loads(resp.content)
         assert resp.status_code == 200
@@ -222,13 +217,12 @@ class TestInstanceUrls(object):
             'No deployment info found')
 
     @pytest.mark.django_db
-    def test_get_undeployed_commits_retr_error(self, client, monkeypatch):
+    def test_get_undeployed_commits_retr_error(
+            self, client, monkeypatch, dummy_host, dummy_error_project):
 
         self.monkeypatch_PhabricatorRetriever(monkeypatch)
-        pr = self.dummy_error_project()
-        host = self.dummy_host()
         instance = Instance.objects.create(
-            project=pr, host=host)
+            project=dummy_error_project, host=dummy_host)
         DeploymentInfo.objects.create(
             instance=instance, date=datetime.datetime.today(),
             commit_hash="commit_hash_1", user='god')
@@ -244,16 +238,15 @@ class TestInstanceUrls(object):
             'API Error: Fixed url for error')
 
     @pytest.mark.django_db
-    def test_get_undeployed_commits_other_error(self, client, monkeypatch):
-    
+    def test_get_undeployed_commits_other_error(
+            self, client, monkeypatch, dummy_project, dummy_host):
+
         self.monkeypatch_PhabricatorRetriever(monkeypatch)
-        pr = self.dummy_project()
-        repo = pr.repository_set.all()[0]
+        repo = dummy_project.repository_set.all()[0]
         repo.url += 'otherexc'
         repo.save()
-        host = self.dummy_host()
         instance = Instance.objects.create(
-            project=pr, host=host)
+            project=dummy_project, host=dummy_host)
         DeploymentInfo.objects.create(
             instance=instance, date=datetime.datetime.today(),
             commit_hash="commit_hash_1", user='god')
@@ -269,19 +262,18 @@ class TestInstanceUrls(object):
             'Fixed url for error')
 
     @pytest.mark.django_db
-    def test_get_undeployed_commits_no_error(self, client, monkeypatch):
-    
+    def test_get_undeployed_commits_no_error(
+            self, client, monkeypatch, dummy_instance):
+
         self.monkeypatch_PhabricatorRetriever(monkeypatch)
 
-        instance = self.dummy_instance()
-
         DeploymentInfo.objects.create(
-            instance=instance, date=datetime.datetime.today(),
+            instance=dummy_instance, date=datetime.datetime.today(),
             commit_hash="commit_hash_10", user='god')
         resp = client.get('{}?project=dummy-project'.format(
             reverse(
                 'instances:undeployed-commits',
-                kwargs={'instance_id': instance.pk}
+                kwargs={'instance_id': dummy_instance.pk}
             )))
         content = json.loads(resp.content)
         assert resp.status_code == 200
