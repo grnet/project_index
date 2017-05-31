@@ -118,7 +118,7 @@ TEMPLATE_CONTEXT_PROCESSORS = [
     'project_index.context_processors.wiki',
     'project_index.context_processors.menu',
     'project_index.context_processors.sentry',
-)
+]
 
 AUTH_PROFILE_MODULE = 'accounts.UserProfile'
 
