@@ -155,8 +155,8 @@ class PhabricatorRetriever(ProjectStatusRetriever):
                               for prot in accepted_protocols])))
 
         # remove 'https://', split on ('/'), keep the semi-final part
-        return 'r' + url.replace(repo_protocol + '://', '').split('/')[-2]
-
+        return 'r' + url.split('/')[-3 if url.endswith("/") else -2]
+    
     @staticmethod
     def get_commit_name(repo_callsign, commit):
         """
@@ -222,7 +222,7 @@ class PhabricatorRetriever(ProjectStatusRetriever):
         :type names: list
 
         :returns: the objects' `phid`s
-        :rtype: list
+        :rtype: dict
         """
 
         data = {}

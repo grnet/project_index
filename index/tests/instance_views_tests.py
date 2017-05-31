@@ -15,30 +15,30 @@ from index.utils.reposervice.status import RetrieverError
 from django.core.urlresolvers import reverse
 
 
-def produce_commit(commit_hash):
-
-    return OrderedDict([
-        ('identifier', commit_hash), ('summary', 'Some summary'),
-        ('author', 'Some author'), ('message', 'Some message'),
-        ('authorEpoch', '1491919872')])
-
-
-COMMIT_DATA = [
-    produce_commit(h_val) for h_val in [
-        'commit_hash_{}'.format(str(ind)) for ind in range(70)]
-]
-
-
 class TestInstanceUrls(object):
 
     @staticmethod
     def monkeypatch_PhabricatorRetriever(monkeypatch):
 
         class MockPHRetriever(object):
+
+            @staticmethod
+            def produce_commit(commit_hash):
+
+                return OrderedDict([
+                    ('identifier', commit_hash), ('summary', 'Some summary'),
+                    ('author', 'Some author'), ('message', 'Some message'),
+                    ('authorEpoch', '1491919872')])
+
             def __init__(self, url):
                 # When the URL has the word `error` in it,
                 # raise a `RetrieverError` on purpose
                 # to test other cases
+                self.commit_data = [
+                    self.produce_commit(h_val) for h_val in [
+                        'commit_hash_{}'.format(str(ind)) for ind in range(70)]
+                ]
+
                 if 'error' in url:
                     raise RetrieverError('Fixed url for error')
                 self.url = url
@@ -51,10 +51,10 @@ class TestInstanceUrls(object):
                 if 'otherexc' in self.url:
                     raise ValueError('Fixed url for error')
 
-                return COMMIT_DATA[:number]
+                return self.commit_data[:number]
 
             def get_commits_between_refs(self, _, __, max_refs=50):
-                return COMMIT_DATA[:max_refs]
+                return self.commit_data[:max_refs]
 
             def get_commit_lite_dict(self, commit):
                 return commit
