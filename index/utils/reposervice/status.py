@@ -147,7 +147,7 @@ class PhabricatorRetriever(ProjectStatusRetriever):
         """
 
         repo_protocol = None
-        accepted_protocols = ['https', 'http']
+        accepted_protocols = ['https']
         for protocol in accepted_protocols:
             repo_protocol = protocol if protocol in url else None
 
