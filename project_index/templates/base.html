@@ -4,7 +4,7 @@
 <html>
 <head>
 	<title>{{ branding.project_name }}{% block page_title %}{% endblock %}</title>
-	<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="{% static "css/screen.css" %}">
 	<link rel="shortcut icon" href="{% static 'images/favicon.ico' %}" />
@@ -61,8 +61,13 @@
 			    {% endfor %}
 			</ul>
 			{% endif %}
+      <ul class="jsmessages">
+        <!-- Insert JS error messages here -->
+      </ul>
+      <div class="row">
 			{% block content %}
 			{% endblock %}
+      </div>
 		</section>
 	</div>
 	<footer>

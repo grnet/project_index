@@ -101,11 +101,12 @@ INSTALLED_APPS = (
     'index',
     'notes',
     'markdown_deux',
+    'rest_framework'
 )
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
 
-TEMPLATE_CONTEXT_PROCESSORS = (
+TEMPLATE_CONTEXT_PROCESSORS = [
     'django.contrib.auth.context_processors.auth',
     'django.core.context_processors.debug',
     'django.core.context_processors.i18n',
@@ -117,7 +118,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'project_index.context_processors.wiki',
     'project_index.context_processors.menu',
     'project_index.context_processors.sentry',
-)
+]
 
 AUTH_PROFILE_MODULE = 'accounts.UserProfile'
 

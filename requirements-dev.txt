@@ -2,5 +2,7 @@ ipython
 ipdb
 pytest
 pytest-django
-flake8
+pytest-sugar
 pytest-cov
+flake8
+mock

@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.core.urlresolvers import reverse
+from django.conf import settings
 
 
 def branding(request):
@@ -31,3 +32,18 @@ def menu(request):
 
 def sentry(request):
     return settings.SENTRY
+
+
+def settings_vars(_):
+    """
+    Context processor.
+    Returns variables from `local_settings` in templates
+    to enable opt-in features
+
+    :returns: the extra variables from `settings`
+    :rtype: dict
+    """
+    return {
+        'DEPLOYMENT_FEATURES_ENABLED': getattr(
+            settings, 'DEPLOYMENT_FEATURES_ENABLED', False)
+    }

@@ -1,107 +1,235 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
 {% load markdown_deux_tags %}
 
 
+{% block extrahead %}
+<link href="https://fonts.googleapis.com/css?family=Cutive+Mono" rel="stylesheet">
+{% endblock %}
 {% block content %}
 <h1>{% if request.user.is_superuser %}<a href="{% url 'admin:index_project_change' project.id %}"><i class="fa fa-pencil"></i>
 </a>{% endif %}{{ project.name|title }}</h1>
 {% if request.user.is_superuser %}<a href="{{ project.get_wiki_url  }}" class="btn btn-default" role="button">Get MoinMoin  <i class="fa fa-wikipedia-w"></i></a>{% endif %}
-<h2>Description</h2>
-	{% autoescape off %}
-		{% markdown %}{{ project.description }}{% endmarkdown %}
-	{% endautoescape %}
+<div class="row">
+  <div class="col-lg-12">
+    <h2>Description</h2>
+    {% autoescape off %}
+    {% markdown %}{{ project.description }}{% endmarkdown %}
+    {% endautoescape %}
 
-	{% with project.doc_set.all as docs %}
-		{% if docs %}
-			<h2>Docs</h2>
-			<div class="list-group">
-			{% for doc in  docs %}
-				<a class="list-group-item" href="{{ doc.url }}">{{ doc.name }}</a>
-			{% endfor %}
-			</div>
-		{% endif %}
-	{% endwith %}
+    {% with project.doc_set.all as docs %}
+    {% if docs %}
+    <h2>Docs</h2>
+    <div class="list-group">
+      {% for doc in  docs %}
+      <a class="list-group-item" href="{{ doc.url }}">{{ doc.name }}</a>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+  </div>
+</div>
 
-	{% with project.instance_set.all as instances %}
-		{% if instances %}
-			<h2>Instances ({{ instances|length }})</h2>
-			<div>
-			{% for instance in instances %}
-				<h3><a target="_blank" href="{{ instance.url }}">{{ instance.get_instance_type_display }}</a></h3>
-				<p>
-					{{ instance.description }}
-				</p>
-				<ul class="list-group">
-					<li class="list-group-item">path: {{ instance.path }}</li>
-					{% if instance.host %}<li class="list-group-item">host: {{ instance.host }}</li>{% endif %}
-					{% if instance.virtualenv %}<li class="list-group-item"> Virtualenv: {{ instance.virtualenv.name }}</li>{% endif %}
-					{% with instance.instance_info.all as dbs %}
-						{% if dbs%}
-							{% for db in dbs %}<a href="{{ db.get_absolute_url }}" class="list-group-item"> db: {{ db.name }} host: {{ db.host }} engine: {{ db.engine }}</a>{% endfor %}
-						{% endif %}
-					{% endwith %}
-				</ul>
-			{% endfor %}
-			</div>
-		{% endif %}
-	{% endwith %}
+<div class="row">
+  {% with project.instance_set.all as instances %}
+  {% if instances %}
+  <div class="col-lg-12">
+    <h2>Instances</h2>
+    <div class="row" id="presenter">
+    </div>
+    <div class="row" id="holder">
+      {% for instance in instances %}
+      <div id="instance-holder-{{instance.get_id}}">
+        <div class="col-lg-6" id="instance-panel-{{instance.get_id}}">
+          <div>
+            <h3>
+              <span>{{ instance.get_instance_type_display }}</span>
+              {% if DEPLOYMENT_FEATURES_ENABLED %}
+              {% if instance.deploymentinfo_set.all %}
+              <button class="btn btn-default pull-right"
+                      id="expander-{{instance.get_id}}">
+                Deployment Status
+              </button>
+              {% endif %}
+              {% endif %}
+            </h3>
+          </div>
+          <p>
+          {{ instance.description }}
+          </p>
+          <div class="list-group">
+            {% if instance.url %}
+            <a class="list-group-item" href="{{instance.url}}">
+              <samp>{{ instance.url }}</samp>
+              <span class="badge libadge">
+                <i class="fa fa-link"></i>
+              </span>
+            </a>
+            {% endif %}
+            <li class="list-group-item">
+              <samp>{{ instance.path }}</samp>
+              <span class="badge libadge">:/</span>
+            </li>
+            {% if instance.host %}
+            <li class="list-group-item">
+              <samp>{{ instance.host }}</samp>
+              <span class="badge libadge">
+                <i class="fa fa-server"></i>
+              </span>
+            </li>
+            {% endif %}
+            {% if instance.virtualenv %}
+            <li class="list-group-item"> Virtualenv: {{ instance.virtualenv.name }}</li>
+            {% endif %}
+          </div>
+          {% if DEPLOYMENT_FEATURES_ENABLED %}
+          {% if instance.deploymentinfo_set.all %}
+          {% with instance.deploymentinfo_set.all as deployments %}
+          <div class="hidden deployments-info">
+            <h4>Deployments information</h4>
+            <div class="list-group">
+              <a class="list-group-item" id="undeployed-commits-{{instance.get_id}}"
+                 data-url="{% url 'instances:undeployed-commits' instance.get_id %}"
+                 data-project-slug="{{project.slug}}">
+                <span class="title"> Undeployed commits </span>
+                <span class="gear pull-right hidden"><i class="fa fa-gear fa-spin"></i></span>
+                <span class="badge hidden">
+                </span>
+              </a>
+              {% for deployment in deployments %}
+              <a class="list-group-item" id="deployment-commits-{{instance.get_id}}"
+                 data-url="{% url 'instances:deployment-details' deployment.get_id %}">
+                <span class="label label-primary">
+                  <i class="fa fa-user"></i> {{deployment.user}}
+                </span>
+                &nbsp;
+                <span class="title">
+                  <samp>{{deployment.commit_hash | slice:":8"}}</samp> @
+                  <span>{{deployment.date}}</span>
+                </span>
+                <span class="gear pull-right hidden"><i class="fa fa-gear fa-spin"></i></span>
+                <span class="badge hidden">
+                </span>
+              </a>
+              {% endfor %}
+            </div>
+          </div>
+          {% endwith %}
+          {% endif %}
+          {% endif %}
+        </div>
+        {% if DEPLOYMENT_FEATURES_ENABLED %}
+        {% if instance.deploymentinfo_set.all %}
+        <div class="col-lg-6 hidden deployment-details-{{instance.get_id}}">
+          <div class="panel panel-default">
+            <div class="panel-heading inline-headers">
+              <h4 class="panel-title">
+                <span data-toggle="collapse" id="expander-{{instance.get_id}}">
+                  <span class="badge libadge">
+                    <i class="fa fa-code-fork"></i>
+                  </span>
+                  <strong>Commits</strong>
+                </span>
+              </h4>
+            </div>
+            <div class="panel-body">
+              <div>
+                Commits list (<i>oldest first</i>):
+              </div>
+              <br/>
+              <div class="list-group commit-list" id="commit-list-{{instance.get_id}}">
+              </div>
+              <div class="well hidden" id="commit-presentation-{{instance.get_id}}">
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+  {% endwith %}
+</div>
 
-	{% with project.repository_set.all as repos %}
-		{% if repos %}
-			<h2>Repositories ({{ repos|length }})</h2>
-			<div class="list-group">
-				{% for repo in repos %}
-					<a class="list-group-item" href="{{ repo.url }}">{{ repo }}</a>
-				{% endfor %}
-			</div>
-		{% endif %}
-	{% endwith %}
+<div class="row">
+  {% with project.repository_set.all as repos %}
+  {% if repos %}
+  <div class="col-lg-6">
+    <h2>Repositories</h2>
+    <div class="list-group">
+      {% for repo in repos %}
+      <a class="list-group-item" href="{{ repo.url }}">
+        <span class="badge libadge"><i class="fa fa-git"></i></span>
+        <samp>{{ repo }}</samp>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+  {% endwith %}
 
-	{% with project.dependencies.all as dependencies %}
-		{% if dependencies %}
-			<h2>Dependencies ({{ dependencies|length }})</h2>
-			<div class="list-group">
-			{% for dependency in dependencies %}
-				<a class="list-group-item" href="{{ dependency.url }}">pip: {{ dependency.pip_package_name }} {% if dependency.version %}({{ dependency.version }}){% endif %}{% if dependency.package_name %} apt: {{dependency.package_name}}{% endif %}</a>
-			{% endfor %}
-			</div>
-		{% endif%}
-	{% endwith %}
-
-	{% with project.cronjob_set.all as cronjobs %}
-		{% if cronjobs %}
-			<h2>Cronjobs ({{ cronjobs|length }})</h2>
-			<div class="list-group">
-			{% for cronjob in cronjobs %}
-				<a class="list-group-item" href="{{ cronjob.get_absolute_url }}">{{ cronjob }}</a>
-			{% endfor %}
-			</div>
-		{% endif%}
-	{% endwith %}
+  {% with project.cronjob_set.all as cronjobs %}
+  {% if cronjobs %}
+  <div class="col-lg-6">
+    <h2>Cronjobs</h2>
+    <div class="list-group">
+      {% for cronjob in cronjobs %}
+      <a class="list-group-item" href="{{ cronjob.get_absolute_url }}">
+        <span class="badge libadge">
+          <i class="fa fa-clock-o"></i>
+        </span>
+        <samp>{{ cronjob }}</samp>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif%}
+  {% endwith %}
+</div>
 
 
-	{% with project.tag.all as tags %}
-		{% if tags %}
-			<h2>Tags ({{ tags|length }})</h2>
-			<div class="list-group">
-			{% for tag in tags %}
-				<a class="list-group-item" href="{{ tag.get_absolute_url }}">{{ tag }}</a>
-			{% endfor %}
-			</div>
-		{% endif%}
-	{% endwith %}
+<div class="row">
+  {% with project.tag.all as tags %}
+  {% if tags %}
+  <div class="col-lg-6">
+    <h2>Tags</h2>
+    <div class="list-group">
+      {% for tag in tags %}
+      <a class="list-group-item" href="{{ tag.get_absolute_url }}">
+        <span class="badge libadge">
+          <i class="fa fa-tag"></i>
+        </span>
+        <samp>{{ tag }}</samp>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif%}
+  {% endwith %}
+</div>
 
-	{% with project.note_set.all as notes %}
-		{% if notes %}
-			<h2>Notes ({{ notes|length }})</h2>
-			{% for note in notes %}
-				<h1>{{ note.title }}</h1>
-				<p>
-					{% autoescape off %}
-						{% markdown %}{{ note.description }}{% endmarkdown %}
-					{% endautoescape %}
-				</p>
-			{% endfor %}
-		{% endif%}
-	{% endwith %}
+<div class="row">
+  {% with project.note_set.all as notes %}
+  {% if notes %}
+  <div class="col-lg-12">
+    <h2>Notes</h2>
+    {% for note in notes %}
+    <h1>{{ note.title }}</h1>
+    <p>
+    {% autoescape off %}
+    {% markdown %}{{ note.description }}{% endmarkdown %}
+    {% endautoescape %}
+    </p>
+    {% endfor %}
+    {% endif%}
+  </div>
+  {% endwith %}
+  {% endblock %}
+</div>
+
+{% block extrajs %}
+<script src="{% static 'js/repo_retriever.js' %}"></script>
 {% endblock %}

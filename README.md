@@ -37,6 +37,24 @@ Tags are used in order to find topic related projects/notes.
 
 ## Features
 
+### Deployment status information
+A new concept has been introduced named "Deployment Information"
+
+You can now store `DeploymentInfo` objects which associate an `Instance`
+with a commit hash (and other information). This allows tracking the 
+current state of the `Instance`.  In addition, Project index can
+communicate with a repository hosting service via its API
+ (currently only `Phabricator`) to retrieve deployment information, such as:
+
+1) Undeployed commits in `master` branch
+2) Commits included in each deployment
+
+The information above is presented in the UI in the project's page, where
+the list of instances is displayed.
+
+To turn this feature on, simply add `DEPLOYMENT_FEATURES_ENABLED = True`
+in your `local_settings.py` and provide `PHABRICATOR_API_TOKEN = <your-token>`
+
 ### MoinMoin Pages Generator
 Offers support for Wiki sites based on MoinMoin syntax. Pages for Database,
 Cronjob, Host, Project entities can be produced, from the details page of each
@@ -85,3 +103,17 @@ It also produces the following categories:
 	Category-MyHosts
 	Category-MyCronjobs
 	Category-MyDatabases
+
+## Testing
+
+To run the tests, you need to install the test requirements. To do so:
+
+    pip install requirements-dev.txt
+
+Then, to run all the tests:
+
+    pytest
+
+To run & produce detailed HTML coverage reports:
+    
+    pytest --cov='.' --cov-config=.coveragerc --cov-report=html:cov_html
