@@ -197,8 +197,6 @@ class PhabricatorRetriever(ProjectStatusRetriever):
         Initializes an instance to work on a specific repo by setting
         `self.repo_phid` which is required for any requests for a repo.
         """
-        if not self.repo_name:
-            self.repo_name = self.get_repo_name(self.api_url)
         try:
             self.repo_phid = self.get_phids_for_objects(
                 [self.repo_name])['result'][self.repo_name]['phid']

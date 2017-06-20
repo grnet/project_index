@@ -233,6 +233,19 @@ class TestPhabricatorRetriever(object):
         with pytest.raises(RetrieverError):
             PhabricatorRetriever('aaa')
 
+    def test_set_repo(self, data, monkeypatch):
+        self.monkeypatch_urllib_urlopen(monkeypatch, data)
+
+        retr = PhabricatorRetriever(data.get('url'))
+        retr.set_repo()
+
+    def test_failed_set_repo(self, data, monkeypatch):
+        self.monkeypatch_urllib_urlopen(monkeypatch, data)
+
+        ph = PhabricatorRetriever('https://aaa.gr')
+        with pytest.raises(RetrieverError):
+            ph.set_repo()
+
     def test_get_commit_lite_dict_default(self, data, monkeypatch):
         self.monkeypatch_urllib_urlopen(monkeypatch, data)
 
