@@ -75,33 +75,31 @@ $(document).ready(function (){
     $.get(url).done(function(data){
 
       $('#commit-list-' + instance_id).children().detach();
-      var commitData = data.data;
+      var commitData = data.commits;
 
       var htmlMessage;
       var tooltipText;
       // need case if status is not success
-      if (data.status.type === 'success'){
-        htmlMessage = commitData.length;
-        var index;
-        for (index = commitData.length-1 ; index >= 0; index--){
+      htmlMessage = commitData.length;
+      var index;
+      for (index = commitData.length-1 ; index >= 0; index--){
 
-          var commitRowId = 'commit-toggler-' + instance_id + '-' + index;
+        var commitRowId = 'commit-toggler-' + instance_id + '-' + index;
 
-          var commitRow = '<li class="list-group-item" ';
-          commitRow += 'id="' + commitRowId +'"';
-          commitRow += 'data-c-id="' + commitData[index].identifier + '"';
-          commitRow += 'data-c-auth="' + commitData[index].author + '"';
-          commitRow += 'data-c-date="' + commitData[index].date + '"';
-          commitRow += 'data-c-message="' + commitData[index].message + '"';
-          commitRow += '>';
-          commitRow += '<code>#' + commitData[index].identifier.slice(0,6);
-          commitRow += '</code> ';
-          commitRow += '<samp>' + commitData[index].summary + '</samp>';
-          commitRow += '</li>';
+        var commitRow = '<li class="list-group-item" ';
+        commitRow += 'id="' + commitRowId +'"';
+        commitRow += 'data-c-id="' + commitData[index].identifier + '"';
+        commitRow += 'data-c-auth="' + commitData[index].author + '"';
+        commitRow += 'data-c-date="' + commitData[index].date + '"';
+        commitRow += 'data-c-message="' + commitData[index].message + '"';
+        commitRow += '>';
+        commitRow += '<code>#' + commitData[index].identifier.slice(0,6);
+        commitRow += '</code> ';
+        commitRow += '<samp>' + commitData[index].summary + '</samp>';
+        commitRow += '</li>';
 
-          $('#commit-list-' + instance_id).append(commitRow);
-          $('#' + commitRowId).bind('click', presentCommit);
-        }
+        $('#commit-list-' + instance_id).append(commitRow);
+        $('#' + commitRowId).bind('click', presentCommit);
       }
       $(that).find('span[class^="gear"]').addClass('hidden');
       $(that).find('span[class^="badge"]').html(htmlMessage);
@@ -111,9 +109,16 @@ $(document).ready(function (){
 
     }).fail(function(param1, param2, param3, param4){
 
+      var error = '';
+      try {
+        var error = JSON.parse(param1.responseText).error;
+      }
+      catch(err){
+        var error = param3;
+      }
       $(that).find('span[class^="gear"]').addClass('hidden');
       $(that).find('span[class^="badge"]').tooltip(
-        {title: param2 + ':' + param3, placement: 'left'});
+        {title: param2 + ': ' + error, placement: 'left'});
       $(that).find('span[class^="badge"]').html('!');
       $(that).find('span[class^="badge"]').removeClass('hidden');
       $(that).find('span[class^="badge"]').addClass('error');

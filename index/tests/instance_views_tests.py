@@ -116,8 +116,7 @@ class TestInstanceUrls(object):
             reverse(
                 'instances:deployment-details',
                 kwargs={'depl_id': depl_info.pk}))
-        assert resp.status_code == 200
-        assert json.loads(resp.content)['status']['type'] == 'error'
+        assert resp.status_code == 400
 
     @pytest.mark.django_db
     def test_get_deployment_details_only_one_depl(
@@ -133,7 +132,6 @@ class TestInstanceUrls(object):
                 'instances:deployment-details',
                 kwargs={'depl_id': depl_info.pk}))
         assert resp.status_code == 200
-        assert json.loads(resp.content)['status']['type'] == 'success'
 
     @pytest.mark.django_db
     def test_get_deployment_details_only_many_depls(
@@ -153,7 +151,6 @@ class TestInstanceUrls(object):
                 'instances:deployment-details',
                 kwargs={'depl_id': depl_info.pk}))
         assert resp.status_code == 200
-        assert json.loads(resp.content)['status']['type'] == 'success'
 
     @pytest.mark.django_db
     def test_get_undeployed_commits_wrong_instance(self, client, monkeypatch):
@@ -192,10 +189,8 @@ class TestInstanceUrls(object):
                 kwargs={'instance_id': dummy_instance.pk}
             )))
         content = json.loads(resp.content)
-        assert resp.status_code == 200
-        assert content['status']['type'] == 'error'
-        assert content['status']['message'] == (
-            'No deployable repo(s) found')
+        assert resp.status_code == 404
+        assert content['error'] == 'No deployable repo(s) found'
 
     @pytest.mark.django_db
     def test_get_undeployed_commits_index_error(
@@ -211,10 +206,8 @@ class TestInstanceUrls(object):
                 kwargs={'instance_id': dummy_instance.pk}
             )))
         content = json.loads(resp.content)
-        assert resp.status_code == 200
-        assert content['status']['type'] == 'error'
-        assert content['status']['message'] == (
-            'No deployment info found')
+        assert resp.status_code == 404
+        assert content['error'] == 'No deployment info found'
 
     @pytest.mark.django_db
     def test_get_undeployed_commits_retr_error(
@@ -232,9 +225,8 @@ class TestInstanceUrls(object):
                 kwargs={'instance_id': instance.pk}
             )))
         content = json.loads(resp.content)
-        assert resp.status_code == 200
-        assert content['status']['type'] == 'error'
-        assert content['status']['message'] == (
+        assert resp.status_code == 400
+        assert content['error'] == (
             'API Error: Fixed url for error')
 
     @pytest.mark.django_db
@@ -256,10 +248,8 @@ class TestInstanceUrls(object):
                 kwargs={'instance_id': instance.pk}
             )))
         content = json.loads(resp.content)
-        assert resp.status_code == 200
-        assert content['status']['type'] == 'error'
-        assert content['status']['message'] == (
-            'Fixed url for error')
+        assert resp.status_code == 500
+        assert content['error'] == 'Fixed url for error'
 
     @pytest.mark.django_db
     def test_get_undeployed_commits_no_error(
@@ -277,8 +267,7 @@ class TestInstanceUrls(object):
             )))
         content = json.loads(resp.content)
         assert resp.status_code == 200
-        assert content['status']['type'] == 'success'
-        commits = content['data']
+        commits = content['commits']
         assert len(commits) == 10
         for comm, ind in zip(commits, range(0, 9)):
             assert comm['identifier'] == 'commit_hash_{}'.format(str(ind))

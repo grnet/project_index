@@ -1,22 +1,18 @@
+"""
+Views for instance app
+"""
 import json
 
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from index.models import Project, Instance, DeploymentInfo
-
 from index.utils.reposervice.status import PhabricatorRetriever, RetrieverError
+from rest_framework import status as req_status
 
 
 def get_error_status(message):
-    """
-    Returns an error description dictionary
-
-    :returns: the dictionary describing the error
-    :rtype: dict
-    """
     return {
-        'type': 'error',
-        'message': message
+        'error': message
     }
 
 
@@ -34,32 +30,44 @@ def get_deployment_details(request, depl_id):
     :returns: `django.http.HttpResponse`
     """
 
-    response = dict()
-    deployment = get_object_or_404(DeploymentInfo, pk=depl_id)
-    deployments = list(
-        deployment.instance.deploymentinfo_set.all().order_by('date'))
-    previous_depl = deployments[
-        deployments.index(deployment) - 1] if (
-            deployments.index(deployment) - 1 >= 0) else None
+    status = req_status.HTTP_200_OK
+    response = None
+    deployment = None
 
     try:
-        hashes = (
-            getattr(previous_depl, 'commit_hash', None),
-            deployment.commit_hash)
-        repo_url = deployment.instance.project.deployment_repo.url
-        retr = PhabricatorRetriever(repo_url)
-        commits = retr.get_commits_between_refs(*hashes)
-    except RetrieverError as exc:
-        response['status'] = get_error_status(
-            'API Error: {}'.format(exc.args[0]))
-    else:
-        response['status'] = {
-            'type': 'success',
-            'message': 'Data retrieved successfully',
-        }
-        response['data'] = [retr.get_commit_lite_dict(commit)
-                            for commit in commits[1:]]
-    return HttpResponse(json.dumps(response), content_type='application/json')
+        deployment = DeploymentInfo.objects.get(pk=depl_id)
+    except DeploymentInfo.DoesNotExist:
+        status = req_status.HTTP_404_NOT_FOUND
+        response = get_error_status(
+            'DeploymentInfo with id "{}" not found'.format(depl_id))
+
+    if deployment:
+        deployments = list(
+            deployment.instance.deploymentinfo_set.all().order_by('date'))
+        previous_depl = deployments[
+            deployments.index(deployment) - 1] if (
+                deployments.index(deployment) - 1 >= 0) else None
+        try:
+            hashes = (
+                getattr(previous_depl, 'commit_hash', None),
+                deployment.commit_hash)
+            repo_url = deployment.instance.project.deployment_repo.url
+            retr = PhabricatorRetriever(repo_url)
+            commits = retr.get_commits_between_refs(*hashes)
+        except RetrieverError as exc:
+            status = req_status.HTTP_400_BAD_REQUEST
+            response = get_error_status('API Error: {}'.format(exc.args[0]))
+        else:
+            commits = [retr.get_commit_lite_dict(commit)
+                       for commit in commits[1:]]
+            response = {
+                'commits': commits
+            }
+
+    return HttpResponse(
+        json.dumps(response),
+        status=status,
+        content_type='application/json')
 
 
 def get_undeployed_commits(request, instance_id):
@@ -74,37 +82,55 @@ def get_undeployed_commits(request, instance_id):
     `django.http.Http404` - depending on whether the request was valid or not
     """
 
-    response = dict()
-    instance = get_object_or_404(Instance, pk=instance_id)
-
-    project_slug = request.GET.get('project')
-    project = get_object_or_404(Project, slug=project_slug)
-
-    repo = project.deployment_repo
+    status = req_status.HTTP_200_OK
+    response = None
+    project = None
+    instance = None
 
     try:
-        retr = PhabricatorRetriever(repo.url)
-        commits = retr.get_recent_commits()
-        instance_hash = instance.deploymentinfo_set.all()[0].commit_hash
-    except AttributeError:
-        response['status'] = get_error_status('No deployable repo(s) found')
-    except IndexError:
-        response['status'] = get_error_status('No deployment info found')
-    except RetrieverError as exc:
-        response['status'] = get_error_status(
-            'API Error: {}'.format(exc.args[0]))
-    except Exception as exc:
-        response['status'] = get_error_status(exc.args[0])
-    else:
-        response['status'] = {
-            'type': 'success',
-            'message': 'Data retrieved successfully',
-        }
-        response['data'] = []
+        instance = Instance.objects.get(pk=instance_id)
+    except Instance.DoesNotExist:
+        status = req_status.HTTP_404_NOT_FOUND
+        response = get_error_status(
+            'Instance with id "{}" does not exist'.format(instance_id))
 
-        for commit in commits:
-            if commit['identifier'] == instance_hash:
-                break
-            response['data'] = (
-                response['data'] + [retr.get_commit_lite_dict(commit)])
-    return HttpResponse(json.dumps(response), content_type='application/json')
+    project_slug = request.GET.get('project')
+    try:
+        project = Project.objects.get(slug=project_slug)
+    except Project.DoesNotExist:
+        status = req_status.HTTP_404_NOT_FOUND
+        response = get_error_status(
+            'Project with slug "{}" does not exist'.format(project_slug))
+
+    if project and instance:
+        repo = project.deployment_repo
+        response = {}
+        try:
+            retr = PhabricatorRetriever(repo.url)
+            commits = retr.get_recent_commits()
+            instance_hash = instance.deploymentinfo_set.all()[0].commit_hash
+        except AttributeError:
+            status = req_status.HTTP_404_NOT_FOUND
+            response = get_error_status('No deployable repo(s) found')
+        except IndexError:
+            status = req_status.HTTP_404_NOT_FOUND
+            response = get_error_status('No deployment info found')
+        except RetrieverError as exc:
+            status = req_status.HTTP_400_BAD_REQUEST
+            response = get_error_status('API Error: {}'.format(exc.args[0]))
+        except Exception as exc:
+            status = req_status.HTTP_500_INTERNAL_SERVER_ERROR
+            response = get_error_status(exc.args[0])
+        else:
+            response['commits'] = []
+
+            for commit in commits:
+                if commit['identifier'] == instance_hash:
+                    break
+                response['commits'] = (
+                    response['commits'] + [retr.get_commit_lite_dict(commit)])
+    return HttpResponse(
+        json.dumps(response),
+        status=status,
+        content_type='application/json'
+    )

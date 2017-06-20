@@ -102,15 +102,18 @@ class PhabricatorRetriever(ProjectStatusRetriever):
         :raises RetrieverError: when the remote API cannot be reached
         """
         self.repo_phid = ''
-        self.repo_name = ''
+        self.repo_name = self.get_repo_name(url)
         super(PhabricatorRetriever, self).__init__(
             self.get_api_url(url), {'api.token': api_token})
-        try:
-            self.set_repo(url)
-        except:
-            raise RetrieverError(
-                'Cannot initiate PhabricatorRetriever. Did you provide '
-                'a valid Phabricator URL? ("{}")'.format(url))
+
+    def ensure_repo_phid(self):
+        """
+        Called by functions that require communication with the
+        Phabricator API to ensure that the `repo_phid` has been
+        correctly retrieved.
+        """
+        if not self.repo_phid:
+            self.set_repo()
 
     @staticmethod
     def get_api_url(url):
@@ -156,7 +159,7 @@ class PhabricatorRetriever(ProjectStatusRetriever):
 
         # remove 'https://', split on ('/'), keep the semi-final part
         return 'r' + url.split('/')[-3 if url.endswith("/") else -2]
-    
+
     @staticmethod
     def get_commit_name(repo_callsign, commit):
         """
@@ -189,17 +192,21 @@ class PhabricatorRetriever(ProjectStatusRetriever):
                 commit.get('authorEpoch')).strftime('%c')})
         return commit_dict
 
-    def set_repo(self, url):
+    def set_repo(self):
         """
-        Initializes an instance to work on a specific repo.
-
-        :param url: A phabricator repository url
-        :type url: str
-
+        Initializes an instance to work on a specific repo by setting
+        `self.repo_phid` which is required for any requests for a repo.
         """
-        self.repo_name = self.get_repo_name(url)
-        self.repo_phid = self.get_phids_for_objects(
-            [self.repo_name])['result'][self.repo_name]['phid']
+        if not self.repo_name:
+            self.repo_name = self.get_repo_name(self.api_url)
+        try:
+            self.repo_phid = self.get_phids_for_objects(
+                [self.repo_name])['result'][self.repo_name]['phid']
+        except Exception as exc:
+            raise RetrieverError(
+                'Exception: ({}) \n'
+                'Cannot get repo phid. Did you provide a valid Phabricator '
+                'URL? ("{}")'.format(str(exc), self.api_url))
 
     def authorize_request(self, **kwargs):
         """
@@ -264,6 +271,8 @@ class PhabricatorRetriever(ProjectStatusRetriever):
         :returns: a list with the commits details
         :rtype: list
         """
+        self.ensure_repo_phid()
+
         r1_data = {
             'callsign': self.repo_name,
             'branch': 'master',
@@ -327,6 +336,8 @@ class PhabricatorRetriever(ProjectStatusRetriever):
         :raises RetrieverError: when the range was not found in the
         retrieved commits
         """
+
+        self.ensure_repo_phid()
 
         def process_commits(phid_start, phid_end, resp):
             start = next(
